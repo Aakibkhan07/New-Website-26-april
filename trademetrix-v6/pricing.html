@@ -386,8 +386,117 @@ function setBilling(type) {
   ['a1','a2','a3'].forEach((id,i) => { document.getElementById(id).textContent = annualTexts[i]; });
 }
 
-function startTrial(plan) {
-  alert(`Starting 1-day free trial for ${plan} plan!\n\n(Razorpay integration yahan aayega)`);
+// ── RAZORPAY CHECKOUT ──────────────────────────────────────────
+(function loadRazorpayScript() {
+  if (document.getElementById('rzp-script')) return;
+  const s = document.createElement('script');
+  s.id = 'rzp-script';
+  s.src = 'https://checkout.razorpay.com/v1/checkout.js';
+  s.async = true;
+  document.head.appendChild(s);
+})();
+
+// Plan amounts in paise (INR × 100)
+const planAmounts = {
+  Starter:       { monthly: 99900,  annual: 83880  },
+  Pro:           { monthly: 249900, annual: 209880 },
+  Institutional: { monthly: 799900, annual: 671880 },
+};
+
+async function startTrial(plan) {
+  const amount = planAmounts[plan]?.[billing];
+  if (!amount) return showToast('❌ Invalid plan selected.', 'error');
+
+  const btn = document.querySelector(\`.plan-btn[onclick*="${plan}"]\`);
+  const originalText = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Loading…'; }
+
+  try {
+    // STEP 1: Create order
+    const res = await fetch('/api/create-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount, currency: 'INR',
+        receipt: `tm_${plan.toLowerCase()}_${Date.now()}`,
+        notes: { plan, billing } })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to create order');
+
+    // STEP 2: Open Razorpay modal
+    const options = {
+      key: 'rzp_test_Sl16kdPPjAeepn',
+      amount: data.amount,
+      currency: data.currency,
+      name: 'Trade Metrix Technologies',
+      description: `${plan} Plan — ${billing === 'monthly' ? 'Monthly' : 'Annual'} Subscription`,
+      order_id: data.order_id,
+      theme: { color: '#00d4aa' },
+      handler: async function(response) {
+        // STEP 3: Verify payment
+        try {
+          const vRes = await fetch('/api/verify-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id:   response.razorpay_order_id,
+              razorpay_signature:  response.razorpay_signature,
+            })
+          });
+          const vData = await vRes.json();
+          if (!vRes.ok) throw new Error(vData.error || 'Verification failed');
+
+          showToast(`✅ Payment successful! Activating your ${plan} plan...`, 'success');
+          setTimeout(() => {
+            window.location.href = 'https://wa.me/917415660385?text=' +
+              encodeURIComponent(`Hi, I subscribed to ${plan} (${billing}). Payment ID: ${response.razorpay_payment_id}. Please activate my account.`);
+          }, 2500);
+        } catch(err) {
+          showToast('⚠️ Payment received but verification failed. Contact: info@trademetrix.tech', 'error');
+        }
+      },
+      modal: { ondismiss: function() {
+        if (btn) { btn.disabled = false; btn.textContent = originalText; }
+        showToast('Payment cancelled.', 'info');
+      }},
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.on('payment.failed', function(resp) {
+      if (btn) { btn.disabled = false; btn.textContent = originalText; }
+      showToast('❌ ' + (resp?.error?.description || 'Payment failed. Try again.'), 'error');
+    });
+    rzp.open();
+
+  } catch(err) {
+    if (btn) { btn.disabled = false; btn.textContent = originalText; }
+    showToast('❌ ' + (err.message || 'Something went wrong.'), 'error');
+  }
+}
+
+function showToast(msg, type) {
+  let t = document.getElementById('rzp-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'rzp-toast';
+    t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9999;max-width:380px;' +
+      'padding:14px 20px;border-radius:12px;font-size:13.5px;font-weight:600;line-height:1.5;' +
+      'backdrop-filter:blur(16px);border:1px solid;box-shadow:0 8px 32px rgba(0,0,0,.4);' +
+      'transition:all .35s cubic-bezier(.34,1.56,.64,1);transform:translateY(80px);opacity:0;';
+    document.body.appendChild(t);
+  }
+  const styles = {
+    success: { bg:'rgba(0,212,170,.12)', border:'rgba(0,212,170,.4)', color:'#00f0c0' },
+    error:   { bg:'rgba(255,77,106,.12)', border:'rgba(255,77,106,.4)', color:'#ff8fa0' },
+    info:    { bg:'rgba(79,143,255,.1)',  border:'rgba(79,143,255,.3)', color:'#a0bcff' },
+  };
+  const s = styles[type] || styles.info;
+  t.style.background = s.bg; t.style.borderColor = s.border; t.style.color = s.color;
+  t.textContent = msg;
+  t.style.transform = 'translateY(0)'; t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.style.transform='translateY(80px)'; t.style.opacity='0'; }, type==='success' ? 5000 : 4000);
 }
 
 const FAQS = [

@@ -742,17 +742,88 @@ function closePW() {
 }
 document.getElementById('pwOverlay').onclick=(e)=>{if(e.target===document.getElementById('pwOverlay'))closePW();};
 
-function processPayment(id) {
+// ── RAZORPAY CHECKOUT ─────────────────────────────────────────
+(function loadRzp(){
+  if(document.getElementById('rzp-script')) return;
+  const s=document.createElement('script');
+  s.id='rzp-script';
+  s.src='https://checkout.razorpay.com/v1/checkout.js';
+  s.async=true; document.head.appendChild(s);
+})();
+
+const COURSE_PRICES = {
+  pa:15000, smc:15000, options:15000, scalping:15000,
+  psychology:15000, swing:15000, algo:15000, macro:15000,
+  bundle:49999
+};
+
+async function processPayment(id) {
+  const c = id==='bundle' ? null : COURSES.find(c=>c.id===id);
+  const amountINR = COURSE_PRICES[id] || 15000;
+  const amount = amountINR * 100; // paise
+  const name = id==='bundle' ? 'All Access Bundle' : (c?.title || id);
+
   closePW();
-  toast('Processing payment... (Demo mode — unlocking)');
-  setTimeout(()=>{
-    if(id==='bundle') COURSES.forEach(c=>ST.unlocked[c.id]=true);
-    else ST.unlocked[id]=true;
-    save();
-    if(ST.course){buildSidebar();renderLesson(ST.lessonIdx);}
-    renderCards();
-    toast('✅ Unlocked! Full access granted. Welcome!');
-  },2000);
+
+  try {
+    // STEP 1: Create order
+    const res = await fetch('/api/create-order', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ amount, currency:'INR',
+        receipt:`tm_acad_${id}_${Date.now()}`,
+        notes:{ course:id } })
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || 'Failed to create order');
+
+    // STEP 2: Open Razorpay modal
+    const opts = {
+      key: 'rzp_test_Sl16kdPPjAeepn',
+      amount: data.amount,
+      currency: data.currency,
+      name: 'TradeMetrix Academy',
+      description: name,
+      order_id: data.order_id,
+      theme: { color:'#00d4aa' },
+      handler: async function(response) {
+        // STEP 3: Verify
+        try {
+          const vRes = await fetch('/api/verify-payment', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id:   response.razorpay_order_id,
+              razorpay_signature:  response.razorpay_signature,
+            })
+          });
+          const vData = await vRes.json();
+          if(!vRes.ok) throw new Error(vData.error || 'Verification failed');
+
+          // ✅ Unlock course
+          if(id==='bundle') COURSES.forEach(c=>ST.unlocked[c.id]=true);
+          else ST.unlocked[id]=true;
+          save();
+          if(ST.course){ buildSidebar(); renderLesson(ST.lessonIdx); }
+          renderCards();
+          toast('✅ Unlocked! Full access granted. Enjoy the course!');
+        } catch(err) {
+          toast('⚠️ Payment received but verification failed. Contact: support@trademetrix.tech');
+        }
+      },
+      modal: { ondismiss: function(){ toast('Payment cancelled.'); } },
+    };
+
+    const rzp = new window.Razorpay(opts);
+    rzp.on('payment.failed', function(resp){
+      toast('❌ ' + (resp?.error?.description || 'Payment failed. Try again.'));
+    });
+    rzp.open();
+
+  } catch(err) {
+    toast('❌ ' + (err.message || 'Something went wrong. Try again.'));
+  }
 }
 
 // ─── TOAST ───────────────────────────────────────────────────────
