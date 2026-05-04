@@ -1,0 +1,8 @@
+{
+  "name": "trademetrix-site",
+  "version": "1.0.0",
+  "description": "TradeMetrix Technologies — Algo Trading Software",
+  "dependencies": {
+    "razorpay": "^2.9.2"
+  }
+}

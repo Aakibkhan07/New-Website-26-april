@@ -2,7 +2,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/academy", "destination": "/trademetrix-academy-platform.html" },
+    { "source": "/academy", "destination": "/academy.html" },
     { "source": "/pricing", "destination": "/pricing.html" },
     { "source": "/performance", "destination": "/performance.html" }
   ]
