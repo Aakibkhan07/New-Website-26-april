@@ -14,9 +14,8 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: "Invalid amount." });
     }
 
-    // Using env vars with fallback to test keys
-    const KEY_ID = process.env.RAZORPAY_KEY_ID || "rzp_test_Sl16kdPPjAeepn";
-    const KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || "DG5sJT2bBk8SxSrPMOxxZckV";
+    const KEY_ID = process.env.RAZORPAY_KEY_ID || "rzp_test_SlZppeQzAmHP7I";
+    const KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || "HMmnpn21G2XA5GjIYaERTC92";
 
     const payload = JSON.stringify({
       amount,
@@ -27,7 +26,7 @@ module.exports = async function handler(req, res) {
     const auth = Buffer.from(KEY_ID + ":" + KEY_SECRET).toString("base64");
 
     const order = await new Promise((resolve, reject) => {
-      const req2 = https.request({
+      const r = https.request({
         hostname: "api.razorpay.com",
         path: "/v1/orders",
         method: "POST",
@@ -36,23 +35,23 @@ module.exports = async function handler(req, res) {
           "Authorization": "Basic " + auth,
           "Content-Length": Buffer.byteLength(payload),
         },
-      }, (r) => {
+      }, (res2) => {
         let data = "";
-        r.on("data", c => data += c);
-        r.on("end", () => {
+        res2.on("data", c => data += c);
+        res2.on("end", () => {
           try {
             const parsed = JSON.parse(data);
-            if (r.statusCode >= 400) {
-              reject(new Error(parsed.error?.description || "Razorpay error " + r.statusCode));
+            if (res2.statusCode >= 400) {
+              reject(new Error(parsed.error?.description || "Razorpay error " + res2.statusCode));
             } else {
               resolve(parsed);
             }
           } catch(e) { reject(new Error("Invalid Razorpay response")); }
         });
       });
-      req2.on("error", reject);
-      req2.write(payload);
-      req2.end();
+      r.on("error", reject);
+      r.write(payload);
+      r.end();
     });
 
     return res.status(200).json({
