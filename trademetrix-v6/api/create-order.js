@@ -14,8 +14,8 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: "Invalid amount." });
     }
 
-    const KEY_ID = process.env.RAZORPAY_KEY_ID || "rzp_test_SlZppeQzAmHP7I";
-    const KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || "HMmnpn21G2XA5GjIYaERTC92";
+    const KEY_ID     = process.env.RAZORPAY_KEY_ID     || "rzp_live_SlgQ5aHxv7KgoU";
+    const KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || "yrQNl6UFQLv0lh0sRMcDDNp7";
 
     const payload = JSON.stringify({
       amount,
