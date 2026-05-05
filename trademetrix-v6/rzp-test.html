@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Razorpay Test</title>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <style>
+    body { font-family: sans-serif; background: #0d0d1a; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 20px; }
+    button { background: #7c3aed; color: #fff; border: none; padding: 16px 36px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; }
+    #log { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); border-radius: 10px; padding: 16px; max-width: 500px; width: 90%; font-size: 13px; font-family: monospace; min-height: 80px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h2>🔬 Razorpay Integration Test</h2>
+  <button onclick="testPay()">Test Pay ₹100</button>
+  <div id="log">Waiting for test...</div>
+
+  <script>
+    function log(msg) {
+      document.getElementById('log').textContent += '\n' + new Date().toLocaleTimeString() + ' → ' + msg;
+    }
+
+    async function testPay() {
+      log('Step 1: Calling /api/create-order...');
+      try {
+        const res = await fetch('/api/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount: 100, currency: 'INR', receipt: 'test_' + Date.now() })
+        });
+        const data = await res.json();
+        log('Step 1 Response: ' + JSON.stringify(data));
+
+        if (!res.ok) { log('ERROR: ' + (data.error || 'Unknown')); return; }
+
+        log('Step 2: Opening Razorpay modal with order_id: ' + data.order_id);
+
+        var rzp = new Razorpay({
+          key: 'rzp_test_SlZppeQzAmHP7I',
+          amount: data.amount,
+          currency: data.currency,
+          name: 'Trade Metrix Technologies',
+          description: 'Test Payment',
+          order_id: data.order_id,
+          theme: { color: '#7c3aed' },
+          handler: function(response) {
+            log('SUCCESS! payment_id: ' + response.razorpay_payment_id);
+            log('Verifying with backend...');
+            fetch('/api/verify-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature
+              })
+            }).then(r => r.json()).then(v => {
+              log('Verify response: ' + JSON.stringify(v));
+            });
+          },
+          modal: {
+            ondismiss: function() { log('Modal dismissed by user'); }
+          }
+        });
+
+        rzp.on('payment.failed', function(resp) {
+          log('PAYMENT FAILED: ' + JSON.stringify(resp.error));
+        });
+
+        rzp.open();
+
+      } catch(err) {
+        log('EXCEPTION: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
