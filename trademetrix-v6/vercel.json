@@ -4,6 +4,7 @@
   "rewrites": [
     { "source": "/academy", "destination": "/academy.html" },
     { "source": "/pricing", "destination": "/pricing.html" },
-    { "source": "/performance", "destination": "/performance.html" }
+    { "source": "/performance", "destination": "/performance.html" },
+    { "source": "/chart-analyzer", "destination": "/chart-analyzer-website.html" }
   ]
 }
