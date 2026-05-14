@@ -3405,7 +3405,7 @@ async function ca_doAnalysis(){
 Be specific about price levels if visible. Apply SMC concepts (order blocks, FVG, liquidity, BOS, CHOCH) if visible.`;
 
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:ca_curFile.type||'image/png',data:ca_imgB64}},{type:'text',text:'Analyze this trading chart.'}]}]})});
+    const res=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:SYS,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:ca_curFile.type||'image/png',data:ca_imgB64}},{type:'text',text:'Analyze this trading chart.'}]}]})});
     const data=await res.json();clearInterval(iv);ca_ld.style.display='none';
     const raw=data.content.map(i=>i.text||'').join('');
     let a;
@@ -3533,7 +3533,7 @@ function ca_hideDots(){const t=document.getElementById('ca-td');if(t)t.remove();
 async function ca_getReply(){
   ca_cBusy=true;ca_cs.disabled=true;ca_showDots();
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:ca_BOT_SYS,messages:ca_cHist})});
+    const res=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:ca_BOT_SYS,messages:ca_cHist})});
     const d=await res.json();ca_hideDots();
     ca_botMsg(d.content?.map(i=>i.text||'').join('')||'Kuch problem aa gayi, dobara try karo!');
   }catch{ca_hideDots();ca_botMsg('Network issue! ⚠️ Thodi der baad try karo.');}
