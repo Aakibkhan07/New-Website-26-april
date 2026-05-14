@@ -1033,7 +1033,7 @@ footer { background:rgba(14,15,32,.85); backdrop-filter:blur(20px); border-top:1
   .fg{grid-template-columns:1fr}
 }
 
-/* ══ CHART ANALYZER ══ */
+/* CHART ANALYZER */
 #ca-section{padding:80px 0 60px;}
 
 :root{
@@ -3192,7 +3192,7 @@ function acEnroll(course){ window.open('https://wa.me/917415660385?text=Hi%20Tra
 </script>
 
 <!-- EMAIL GATE MODAL -->
-<div class="moverlay" id="emailModal">
+<div class="moverlay" id="ca-emailModal">
   <div class="mbox">
     <div class="mtop"></div>
     <div class="mbody">
@@ -3200,17 +3200,17 @@ function acEnroll(course){ window.open('https://wa.me/917415660385?text=Hi%20Tra
       <h2>Unlock <span class="gt">Free Analysis</span></h2>
       <p>Apna naam aur email do — TradeMetrix ke free trading insights, strategy updates aur exclusive tools bhi milenge inbox mein!</p>
       <div class="mform">
-        <input class="minput" type="text" id="gname" placeholder="Aapka Naam" autocomplete="name">
-        <input class="minput" type="email" id="gemail" placeholder="Email Address" autocomplete="email">
-        <button class="btn-mprimary" id="gsubmit">Unlock Analysis →</button>
+        <input class="minput" type="text" id="ca-gname" placeholder="Aapka Naam" autocomplete="name">
+        <input class="minput" type="email" id="ca-gemail" placeholder="Email Address" autocomplete="email">
+        <button class="btn-mprimary" id="ca-gsubmit">Unlock Analysis →</button>
       </div>
-      <div class="msub"><a id="gskip">Skip karo (1 limited use bachi hai)</a></div>
+      <div class="msub"><a id="ca-gskip">Skip karo (1 limited use bachi hai)</a></div>
     </div>
   </div>
 </div>
 
 <!-- LIMIT MODAL -->
-<div class="moverlay" id="limitModal">
+<div class="moverlay" id="ca-limitModal">
   <div class="mbox" style="border-color:rgba(245,158,11,.2)">
     <div class="mtop" style="background:linear-gradient(90deg,#f59e0b,#f43f5e,#f59e0b)"></div>
     <div class="mbody">
@@ -3218,9 +3218,9 @@ function acEnroll(course){ window.open('https://wa.me/917415660385?text=Hi%20Tra
       <h2>Free <span class="gt">Trial Used</span></h2>
       <p>Aapka 1 free analysis trial khatam ho gaya. Unlimited ke liye ya expert se free demo ke liye WhatsApp karo!</p>
       <div class="mform">
-        <a class="btn-mwa" id="limitWA" href="#" target="_blank">💬 WhatsApp — Free Demo Lo</a>
+        <a class="btn-mwa" id="ca-limitWA" href="#" target="_blank">💬 WhatsApp — Free Demo Lo</a>
       </div>
-      <div class="msub" style="margin-top:14px"><a id="limitClose">Baad mein aaunga →</a></div>
+      <div class="msub" style="margin-top:14px"><a id="ca-limitClose">Baad mein aaunga →</a></div>
     </div>
   </div>
 </div>
@@ -3243,43 +3243,43 @@ function acEnroll(course){ window.open('https://wa.me/917415660385?text=Hi%20Tra
       <span class="hf">Risk Assessment</span>
     </div>
     <div class="usage-wrap">
-      <div class="usage-dot" id="ud1" style=""></div>
-      <span class="usage-lbl" id="ulbl">1 FREE ANALYSIS AVAILABLE</span>
+      <div class="usage-dot" id="ca-ud1" style=""></div>
+      <span class="usage-lbl" id="ca-ulbl">1 FREE ANALYSIS AVAILABLE</span>
     </div>
   </div>
 
   <!-- UPLOAD -->
-  <div class="upload-zone" id="uploadZone">
-    <input type="file" id="fileInput" accept="image/*">
+  <div class="upload-zone" id="ca-uploadZone">
+    <input type="file" id="ca-fileInput" accept="image/*">
     <span class="uico">📊</span>
     <h3>Chart Image Drop Karo ya Click Karo</h3>
     <p>PNG · JPG · JPEG — Candlestick, Line, Heikin Ashi sab chalega</p>
   </div>
 
   <!-- PREVIEW -->
-  <div id="prev-area">
+  <div id="ca-prev-area">
     <div class="prev-wrap">
-      <img id="prev-img" src="" alt="Chart Preview">
+      <img id="ca-prev-img" src="" alt="Chart Preview">
       <div class="prev-bar">
-        <span id="fname">chart.png</span>
-        <button class="btn-rm" id="rmBtn">✕ Remove</button>
+        <span id="ca-fname">chart.png</span>
+        <button class="btn-rm" id="ca-rmBtn">✕ Remove</button>
       </div>
     </div>
   </div>
 
   <!-- ANALYZE -->
-  <button class="btn-analyze" id="analyzeBtn" disabled>
+  <button class="btn-analyze" id="ca-analyzeBtn" disabled>
     ⚡ Analyze Chart with AI
   </button>
 
   <!-- LOADING -->
-  <div id="loading">
+  <div id="ca-loading">
     <div class="spin"></div>
-    <p class="load-txt" id="ltxt">// SCANNING CHART PATTERNS...</p>
+    <p class="load-txt" id="ca-ltxt">// SCANNING CHART PATTERNS...</p>
   </div>
 
   <!-- RESULTS -->
-  <div id="results"></div>
+  <div id="ca-results"></div>
 
   <div class="disc">
     ⚠ DISCLAIMER: This tool is for educational purposes only. TradeMetrix is not a SEBI-registered investment advisor. This does not constitute financial or investment advice. Always conduct your own research before trading.
@@ -3291,147 +3291,147 @@ function acEnroll(course){ window.open('https://wa.me/917415660385?text=Hi%20Tra
 </section>
 
 <!-- CHATBOT -->
-<button id="cfab">🤖<span class="cfab-b">AI</span></button>
-<div id="cwin">
+<button id="ca-cfab">🤖<span class="cfab-b">AI</span></button>
+<div id="ca-cwin">
   <div class="ch">
     <div class="cav">🤖</div>
     <div class="chi">
       <div class="chn">TradeBot — TradeMetrix AI</div>
       <div class="chs"><span class="odot"></span>Online · Trading Expert</div>
     </div>
-    <button class="cclose" id="cclose">✕</button>
+    <button class="cclose" id="ca-cclose">✕</button>
   </div>
-  <div class="cmsgs" id="cmsgs"></div>
-  <div class="qrs" id="qrs">
+  <div class="cmsgs" id="ca-cmsgs"></div>
+  <div class="qrs" id="ca-qrs">
     <button class="qrb">SMC kya hota hai?</button>
     <button class="qrb">Stop Loss kahan lagaun?</button>
     <button class="qrb">Algo trading kya hai?</button>
     <button class="qrb">Software demo chahiye</button>
   </div>
   <div class="cinrow">
-    <textarea id="cinput" placeholder="Koi bhi trading question poochho..." rows="1"></textarea>
-    <button id="csend">➤</button>
+    <textarea id="ca-cinput" placeholder="Koi bhi trading question poochho..." rows="1"></textarea>
+    <button id="ca-csend">➤</button>
   </div>
 </div>
 
 <script>
 
 // ── CONFIG ──────────────────────────────────────────────
-const WA_NUM  = '917415660385';
-const WA_MSG  = encodeURIComponent('Namaste! TradeMetrix Chart Analyzer se aa raha hoon. Mujhe algo trading ka free demo chahiye.');
-const WA_LINK = `https://wa.me/${WA_NUM}?text=${WA_MSG}`;
-document.getElementById('limitWA').href = WA_LINK;
+const ca_WA_NUM  = '917415660385';
+const ca_WA_MSG  = encodeURIComponent('Namaste! TradeMetrix Chart Analyzer se aa raha hoon. Mujhe algo trading ka free demo chahiye.');
+const ca_WA_LINK = `https://wa.me/${ca_WA_NUM}?text=${ca_WA_MSG}`;
+document.getElementById('ca-limitWA').href = ca_WA_LINK;
 
 // ── FREEMIUM — 1 free trial ─────────────────────────────
-const TODAY = new Date().toDateString();
-let ud = JSON.parse(localStorage.getItem('tmx2_ud') || '{}');
-if (ud.date !== TODAY) ud = { date: TODAY, count: 0, emailDone: false };
-const saveUD = () => localStorage.setItem('tmx2_ud', JSON.stringify(ud));
-const getRem  = () => Math.max(0, 1 - ud.count);
+const ca_TODAY = new Date().toDateString();
+let ca_ud = JSON.parse(localStorage.getItem('tmx2_ud') || '{}');
+if (ca_ud.date !== ca_TODAY) ca_ud = { date: ca_TODAY, count: 0, emailDone: false };
+const ca_saveUD = () => localStorage.setItem('tmx2_ud', JSON.stringify(ca_ud));
+const ca_getRem  = () => Math.max(0, 1 - ca_ud.count);
 
-function updateUsageUI() {
-  const dot = document.getElementById('ud1');
-  const lbl = document.getElementById('ulbl');
-  if (ud.count >= 1) {
+function ca_updateUsageUI() {
+  const dot = document.getElementById('ca-ud1');
+  const lbl = document.getElementById('ca-ulbl');
+  if (ca_ud.count >= 1) {
     dot.style.background = 'rgba(255,255,255,.1)';
     dot.style.boxShadow = 'none';
-    lbl.textContent = '0 FREE ANALYSES LEFT TODAY';
+    lbl.textContent = '0 FREE ANALYSES LEFT ca_TODAY';
   } else {
     dot.classList.add('on');
     lbl.textContent = '1 FREE ANALYSIS AVAILABLE';
   }
 }
-updateUsageUI();
+ca_updateUsageUI();
 
 // ── MODALS ──────────────────────────────────────────────
-const showM = id => document.getElementById(id).classList.add('show');
-const hideM = id => document.getElementById(id).classList.remove('show');
+const ca_showM = id => document.getElementById(id).classList.add('show');
+const ca_hideM = id => document.getElementById(id).classList.remove('show');
 
-document.getElementById('gsubmit').onclick = () => {
-  const name  = document.getElementById('gname').value.trim();
-  const email = document.getElementById('gemail').value.trim();
-  if (!email.includes('@')) { document.getElementById('gemail').style.borderColor='var(--r)'; return; }
+document.getElementById('ca-gsubmit').onclick = () => {
+  const name  = document.getElementById('ca-gname').value.trim();
+  const email = document.getElementById('ca-gemail').value.trim();
+  if (!email.includes('@')) { document.getElementById('ca-gemail').style.borderColor='var(--r)'; return; }
   const leads = JSON.parse(localStorage.getItem('tmx2_leads') || '[]');
   leads.push({ name, email, ts: new Date().toISOString(), src:'chart-analyzer-v2' });
   localStorage.setItem('tmx2_leads', JSON.stringify(leads));
   console.log('📧 LEAD:', { name, email });
-  ud.emailDone = true; saveUD();
-  hideM('emailModal');
-  doAnalysis();
+  ca_ud.emailDone = true; ca_saveUD();
+  ca_hideM('emailModal');
+  ca_doAnalysis();
 };
-document.getElementById('gskip').onclick  = () => { hideM('emailModal'); doAnalysis(); };
-document.getElementById('limitClose').onclick = () => hideM('limitModal');
+document.getElementById('ca-gskip').onclick  = () => { ca_hideM('emailModal'); ca_doAnalysis(); };
+document.getElementById('ca-limitClose').onclick = () => ca_hideM('limitModal');
 
 // ── FILE UPLOAD ─────────────────────────────────────────
-const fi=document.getElementById('fileInput'), uz=document.getElementById('uploadZone'),
-      pa=document.getElementById('prev-area'), pi=document.getElementById('prev-img'),
-      fn=document.getElementById('fname'), rb=document.getElementById('rmBtn'),
-      ab=document.getElementById('analyzeBtn'), ld=document.getElementById('loading'),
-      lt=document.getElementById('ltxt'), rs=document.getElementById('results');
-let curFile=null, imgB64=null;
+const ca_fi=document.getElementById('ca-fileInput'), ca_uz=document.getElementById('ca-uploadZone'),
+      ca_pa=document.getElementById('ca-prev-area'), ca_pi=document.getElementById('ca-prev-img'),
+      ca_fn=document.getElementById('ca-fname'), ca_rb=document.getElementById('ca-rmBtn'),
+      ca_ab=document.getElementById('ca-analyzeBtn'), ca_ld=document.getElementById('ca-loading'),
+      ca_lt=document.getElementById('ca-ltxt'), ca_rs=document.getElementById('ca-results');
+let ca_curFile=null, ca_imgB64=null;
 
-uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag')});
-uz.addEventListener('dragleave',()=>uz.classList.remove('drag'));
-uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('drag');const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))hFile(f)});
-fi.onchange=()=>{if(fi.files[0])hFile(fi.files[0])};
-rb.onclick=reset;
+ca_uz.addEventListener('dragover',e=>{e.preventDefault();ca_uz.classList.add('drag')});
+ca_uz.addEventListener('dragleave',()=>ca_uz.classList.remove('drag'));
+ca_uz.addEventListener('drop',e=>{e.preventDefault();ca_uz.classList.remove('drag');const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))ca_hFile(f)});
+ca_fi.onchange=()=>{if(ca_fi.files[0])ca_hFile(ca_fi.files[0])};
+ca_rb.onclick=reset;
 
-function hFile(file){
-  curFile=file;fn.textContent=file.name;
+function ca_hFile(file){
+  ca_curFile=file;ca_fn.textContent=file.name;
   const r=new FileReader();
-  r.onload=e=>{pi.src=e.target.result;imgB64=e.target.result.split(',')[1];pa.style.display='block';uz.style.display='none';ab.disabled=false;};
+  r.onload=e=>{ca_pi.src=e.target.result;ca_imgB64=e.target.result.split(',')[1];ca_pa.style.display='block';ca_uz.style.display='none';ca_ab.disabled=false;};
   r.readAsDataURL(file);
 }
-function reset(){curFile=null;imgB64=null;pa.style.display='none';uz.style.display='block';ab.disabled=true;rs.style.display='none';rs.innerHTML='';fi.value='';}
+function reset(){ca_curFile=null;ca_imgB64=null;ca_pa.style.display='none';ca_uz.style.display='block';ca_ab.disabled=true;ca_rs.style.display='none';ca_rs.innerHTML='';ca_fi.value='';}
 
 // ── ANALYZE CLICK ───────────────────────────────────────
-ab.onclick=()=>{
-  if(!imgB64)return;
-  if(getRem()===0){showM('limitModal');return;}
-  if(ud.count===0&&!ud.emailDone){showM('emailModal');return;}
-  doAnalysis();
+ca_ab.onclick=()=>{
+  if(!ca_imgB64)return;
+  if(ca_getRem()===0){ca_showM('limitModal');return;}
+  if(ca_ud.count===0&&!ca_ud.emailDone){ca_showM('emailModal');return;}
+  ca_doAnalysis();
 };
 
 // ── ANALYSIS ────────────────────────────────────────────
-const MSGS=['// SCANNING CHART PATTERNS...','// IDENTIFYING SUPPORT & RESISTANCE...','// READING CANDLESTICK FORMATIONS...','// DETECTING TREND STRUCTURE...','// CALCULATING MOMENTUM SIGNALS...','// GENERATING AI PREDICTION...'];
+const ca_MSGS=['// SCANNING CHART PATTERNS...','// IDENTIFYING SUPPORT & RESISTANCE...','// READING CANDLESTICK FORMATIONS...','// DETECTING TREND STRUCTURE...','// CALCULATING MOMENTUM SIGNALS...','// GENERATING AI PREDICTION...'];
 
-async function doAnalysis(){
-  ud.count++;saveUD();updateUsageUI();
-  ab.disabled=true;ld.style.display='block';rs.style.display='none';rs.innerHTML='';
-  let mi=0;const iv=setInterval(()=>{mi=(mi+1)%MSGS.length;lt.textContent=MSGS[mi];},1300);
+async function ca_doAnalysis(){
+  ca_ud.count++;ca_saveUD();ca_updateUsageUI();
+  ca_ab.disabled=true;ca_ld.style.display='block';ca_rs.style.display='none';ca_rs.innerHTML='';
+  let mi=0;const iv=setInterval(()=>{mi=(mi+1)%ca_MSGS.length;ca_lt.textContent=ca_MSGS[mi];},1300);
 
   const SYS=`You are an expert technical analyst specializing in Indian and global trading markets. Analyze the uploaded trading chart image and respond ONLY with valid JSON (no markdown backticks, no extra text):
 {"overview":"2-3 line summary of what you see","signal":"BULLISH or BEARISH or NEUTRAL","confidence":75,"trend":"trend structure and direction","patterns":["pattern1","pattern2","pattern3"],"support_levels":["level1","level2"],"resistance_levels":["level1","level2"],"prediction":"detailed short-term prediction and likely scenario","targets":["target1","target2"],"risk":"risk factors and what would invalidate this analysis","recommendation":"key things to watch (not financial advice)"}
 Be specific about price levels if visible. Apply SMC concepts (order blocks, FVG, liquidity, BOS, CHOCH) if visible.`;
 
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:curFile.type||'image/png',data:imgB64}},{type:'text',text:'Analyze this trading chart.'}]}]})});
-    const data=await res.json();clearInterval(iv);ld.style.display='none';
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:ca_curFile.type||'image/png',data:ca_imgB64}},{type:'text',text:'Analyze this trading chart.'}]}]})});
+    const data=await res.json();clearInterval(iv);ca_ld.style.display='none';
     const raw=data.content.map(i=>i.text||'').join('');
     let a;
     try{a=JSON.parse(raw.replace(/```json|```/g,'').trim());}
     catch{a={overview:raw,signal:'NEUTRAL',confidence:60,trend:'See overview.',patterns:['See overview'],support_levels:['—'],resistance_levels:['—'],prediction:raw,targets:['—'],risk:'Always use stop loss.',recommendation:'See overview.'};}
-    renderResults(a);
+    ca_renderResults(a);
   }catch(err){
-    clearInterval(iv);ld.style.display='none';
-    rs.style.display='block';
-    rs.innerHTML=`<div class="rcard" style="border-color:rgba(244,63,94,.2)"><div class="rlabel">Error</div><div class="rcontent">Analysis fail hui. Dobara try karo. (${err.message})</div></div>`;
-    ab.disabled=false;
+    clearInterval(iv);ca_ld.style.display='none';
+    ca_rs.style.display='block';
+    ca_rs.innerHTML=`<div class="rcard" style="border-color:rgba(244,63,94,.2)"><div class="rlabel">Error</div><div class="rcontent">Analysis fail hui. Dobara try karo. (${err.message})</div></div>`;
+    ca_ab.disabled=false;
   }
 }
 
 // ── RENDER ──────────────────────────────────────────────
-function renderResults(a){
+function ca_renderResults(a){
   const sc=a.signal==='BULLISH'?'sig-bull':a.signal==='BEARISH'?'sig-bear':'sig-neut';
   const si=a.signal==='BULLISH'?'▲ BULLISH':a.signal==='BEARISH'?'▼ BEARISH':'◆ NEUTRAL';
   const sC=(a.support_levels||[]).map(l=>`<span class="chip chip-s">${l}</span>`).join('');
   const rC=(a.resistance_levels||[]).map(l=>`<span class="chip chip-r">${l}</span>`).join('');
   const tC=(a.targets||[]).map(l=>`<span class="chip chip-t">${l}</span>`).join('');
   const pI=(a.patterns||[]).map(p=>`<li>${p}</li>`).join('');
-  const rem=getRem();
+  const rem=ca_getRem();
   const remBanner=rem===0?`<div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.18);border-radius:8px;padding:10px 14px;font-family:var(--fm);font-size:10px;color:var(--a);margin-bottom:14px;letter-spacing:.04em">⚡ FREE TRIAL USED — WhatsApp karo unlimited access ke liye</div>`:'';
 
-  rs.innerHTML=`
+  ca_rs.innerHTML=`
     <div class="r-head fu"><h2>AI <span class="gt">Analysis</span></h2><span class="r-ts">// ${new Date().toLocaleTimeString('en-IN')}</span></div>
     ${remBanner}
     <div class="sig-row fu">
@@ -3482,62 +3482,62 @@ function renderResults(a){
         <h4>Is analysis pe expert se baat karo</h4>
         <p>TradeMetrix algo trading software ka free demo lo — manual analysis band karo, automation shuru karo.</p>
       </div>
-      <a class="wa-btn" href="${WA_LINK}" target="_blank">💬 WhatsApp Karo</a>
+      <a class="wa-btn" href="${ca_WA_LINK}" target="_blank">💬 WhatsApp Karo</a>
     </div>
     <div style="margin-top:18px;text-align:center" class="fu">
       <button class="btn-analyze" id="reBtn" style="max-width:280px;margin:0 auto">↺ Analyze Another Chart</button>
     </div>`;
 
-  rs.style.display='block';ab.disabled=false;
-  setTimeout(()=>{const b=document.getElementById('cfill');if(b)b.style.width=(a.confidence||70)+'%';},200);
-  document.getElementById('reBtn').onclick=()=>{reset();window.scrollTo({top:0,behavior:'smooth'});};
-  rs.scrollIntoView({behavior:'smooth',block:'start'});
-  if(getRem()===0)setTimeout(()=>showM('limitModal'),6000);
+  ca_rs.style.display='block';ca_ab.disabled=false;
+  setTimeout(()=>{const b=document.getElementById('ca-cfill');if(b)b.style.width=(a.confidence||70)+'%';},200);
+  document.getElementById('ca-reBtn').onclick=()=>{reset();window.scrollTo({top:0,behavior:'smooth'});};
+  ca_rs.scrollIntoView({behavior:'smooth',block:'start'});
+  if(ca_getRem()===0)setTimeout(()=>ca_showM('limitModal'),6000);
 }
 
 // ── CHATBOT ─────────────────────────────────────────────
-const fab=document.getElementById('cfab'),cw=document.getElementById('cwin'),
-      cc=document.getElementById('cclose'),cm=document.getElementById('cmsgs'),
-      ci=document.getElementById('cinput'),cs=document.getElementById('csend'),
-      qr=document.getElementById('qrs');
-let cOpen=false,cHist=[],cBusy=false;
+const ca_fab=document.getElementById('ca-cfab'),ca_cw=document.getElementById('ca-cwin'),
+      ca_cc=document.getElementById('ca-cclose'),ca_cm=document.getElementById('ca-cmsgs'),
+      ca_ci=document.getElementById('ca-cinput'),ca_cs=document.getElementById('ca-csend'),
+      ca_qr=document.getElementById('ca-qrs');
+let ca_cOpen=false,ca_cHist=[],ca_cBusy=false;
 
-const BOT_SYS=`You are TradeBot, expert trading assistant for TradeMetrix — an algorithmic trading software company from India. No tips, no advisory, only education and software info.
+const ca_BOT_SYS=`You are TradeBot, expert trading assistant for TradeMetrix — an algorithmic trading software company from India. No tips, no advisory, only education and software info.
 Cover: Technical Analysis, SMC (order blocks, FVG, liquidity, BOS, CHOCH), Price Action, Algo trading, Risk management, NSE/BSE/Nifty/BankNifty/MCX, Forex, Crypto.
 Rules: Answer in Hinglish (Hindi+English mix). Concise (3-5 lines). Use 📈📉⚡ occasionally. Add disclaimer for financial topics. Mention TradeMetrix algo software naturally when relevant. NEVER give specific stock buy/sell calls or tips. For software demo: say "WhatsApp karo +91 74156 60385".`;
 
-const tog=()=>{
-  cOpen=!cOpen;cw.classList.toggle('open',cOpen);
-  if(cOpen&&cHist.length===0)setTimeout(()=>botMsg("Namaste! 👋 Main TradeBot hoon — TradeMetrix ka AI Trading Assistant.\n\nKoi bhi trading question poochho — SMC, Price Action, Algo Trading, Risk Management — sab free! 🚀"),300);
-  if(cOpen)setTimeout(()=>ci.focus(),350);
+const ca_tog=()=>{
+  ca_cOpen=!ca_cOpen;ca_cw.classList.toggle('open',ca_cOpen);
+  if(ca_cOpen&&ca_cHist.length===0)setTimeout(()=>ca_botMsg("Namaste! 👋 Main TradeBot hoon — TradeMetrix ka AI Trading Assistant.\n\nKoi bhi trading question poochho — SMC, Price Action, Algo Trading, Risk Management — sab free! 🚀"),300);
+  if(ca_cOpen)setTimeout(()=>ca_ci.focus(),350);
 };
-fab.onclick=tog;cc.onclick=tog;
-qr.querySelectorAll('.qrb').forEach(b=>b.onclick=()=>uMsg(b.textContent));
-ci.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendC();}});
-cs.onclick=sendC;
-ci.oninput=()=>{ci.style.height='auto';ci.style.height=Math.min(ci.scrollHeight,90)+'px';};
+ca_fab.onclick=ca_tog;ca_cc.onclick=ca_tog;
+ca_qr.querySelectorAll('.qrb').forEach(b=>b.onclick=()=>ca_uMsg(b.textContent));
+ca_ci.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();ca_sendC();}});
+ca_cs.onclick=ca_sendC;
+ca_ci.oninput=()=>{ca_ci.style.height='auto';ca_ci.style.height=Math.min(ca_ci.scrollHeight,90)+'px';};
 
-function sendC(){const t=ci.value.trim();if(!t||cBusy)return;ci.value='';ci.style.height='36px';uMsg(t);}
-function uMsg(t){addMsg('user',t);cHist.push({role:'user',content:t});qr.style.display='none';getReply();}
-function botMsg(t){cHist.push({role:'assistant',content:t});addMsg('bot',t);}
+function ca_sendC(){const t=ca_ci.value.trim();if(!t||ca_cBusy)return;ca_ci.value='';ca_ci.style.height='36px';ca_uMsg(t);}
+function ca_uMsg(t){ca_addMsg('user',t);ca_cHist.push({role:'user',content:t});ca_qr.style.display='none';ca_getReply();}
+function ca_botMsg(t){ca_cHist.push({role:'assistant',content:t});ca_addMsg('bot',t);}
 
-function addMsg(role,text){
+function ca_addMsg(role,text){
   const d=document.createElement('div');d.className=`msg ${role}`;
   const av=document.createElement('div');av.className='mav';av.textContent=role==='bot'?'🤖':'👤';
   const b=document.createElement('div');b.className='mbub';b.textContent=text;
-  d.appendChild(av);d.appendChild(b);cm.appendChild(d);cm.scrollTop=cm.scrollHeight;
+  d.appendChild(av);d.appendChild(b);ca_cm.appendChild(d);ca_cm.scrollTop=ca_cm.scrollHeight;
 }
-function showDots(){const d=document.createElement('div');d.className='msg bot';d.id='td';const av=document.createElement('div');av.className='mav';av.textContent='🤖';const b=document.createElement('div');b.className='mbub';b.innerHTML='<div class="tdots"><span></span><span></span><span></span></div>';d.appendChild(av);d.appendChild(b);cm.appendChild(d);cm.scrollTop=cm.scrollHeight;}
-function hideDots(){const t=document.getElementById('td');if(t)t.remove();}
+function ca_showDots(){const d=document.createElement('div');d.className='msg bot';d.id='td';const av=document.createElement('div');av.className='mav';av.textContent='🤖';const b=document.createElement('div');b.className='mbub';b.innerHTML='<div class="tdots"><span></span><span></span><span></span></div>';d.appendChild(av);d.appendChild(b);ca_cm.appendChild(d);ca_cm.scrollTop=ca_cm.scrollHeight;}
+function ca_hideDots(){const t=document.getElementById('ca-td');if(t)t.remove();}
 
-async function getReply(){
-  cBusy=true;cs.disabled=true;showDots();
+async function ca_getReply(){
+  ca_cBusy=true;ca_cs.disabled=true;ca_showDots();
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:BOT_SYS,messages:cHist})});
-    const d=await res.json();hideDots();
-    botMsg(d.content?.map(i=>i.text||'').join('')||'Kuch problem aa gayi, dobara try karo!');
-  }catch{hideDots();botMsg('Network issue! ⚠️ Thodi der baad try karo.');}
-  cBusy=false;cs.disabled=false;ci.focus();
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:ca_BOT_SYS,messages:ca_cHist})});
+    const d=await res.json();ca_hideDots();
+    ca_botMsg(d.content?.map(i=>i.text||'').join('')||'Kuch problem aa gayi, dobara try karo!');
+  }catch{ca_hideDots();ca_botMsg('Network issue! ⚠️ Thodi der baad try karo.');}
+  ca_cBusy=false;ca_cs.disabled=false;ca_ci.focus();
 }
 
 </script>
