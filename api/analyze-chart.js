@@ -1,3 +1,37 @@
+const chartAnalysisPrompt = `You are an expert technical analysis professional specializing in trading charts. Analyze the provided trading chart image and provide a comprehensive technical analysis.
+
+Return your analysis in this exact JSON format:
+{
+  "chartType": "candlestick/line/ohlc/etc",
+  "timeframe": "estimated timeframe",
+  "currentPrice": "current price level if visible",
+  "trend": {
+    "direction": "Uptrend/Downtrend/Sideways",
+    "strength": "Strong/Moderate/Weak",
+    "description": "detailed description"
+  },
+  "support_levels": ["level1", "level2", "level3"],
+  "resistance_levels": ["level1", "level2", "level3"],
+  "patterns": ["Hammer", "Doji", "Engulfing", "etc - list detected patterns"],
+  "indicators": {
+    "rsi": "RSI value and interpretation",
+    "macd": "MACD status",
+    "movingAverages": "MA alignment and interpretation"
+  },
+  "signal": "BUY/SELL/HOLD",
+  "confidence": "80-95%",
+  "prediction": "Next likely price level based on technical analysis",
+  "targets": {
+    "shortTerm": "price target for next 1-3 days",
+    "mediumTerm": "price target for next 1-2 weeks"
+  },
+  "stopLoss": "recommended stop loss level",
+  "riskReward": "risk-reward ratio explanation",
+  "overview": "comprehensive analysis summary with key observations"
+}
+
+Be precise, professional, and provide specific price levels where visible.`;
+
 export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -13,105 +47,81 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { image, mimeType, systemPrompt } = req.body;
+    const { image } = req.body;
 
     if (!image) {
       return res.status(400).json({ error: 'No image provided' });
     }
 
-    // Using OpenAI API (Claude-compatible through OpenAI)
-    // You can also use Anthropic directly if you prefer
-    const apiKey = process.env.ANTHROPIC_API_KEY || process.env.OPENAI_API_KEY;
+    const apiKey = process.env.OPENAI_API_KEY;
 
     if (!apiKey) {
-      console.error('[v0] No API key configured');
+      console.error('[v0] OpenAI API key not configured');
       return res.status(500).json({ 
-        error: 'Server not configured. Contact admin.',
+        error: 'API key not configured',
         analysis: {
-          overview: 'Demo Mode: Server not fully configured. This is a demo analysis.\n\nFor production: Configure ANTHROPIC_API_KEY or OPENAI_API_KEY in environment variables.',
+          overview: 'Chart analysis service not configured. Please contact support.',
           signal: 'NEUTRAL',
-          confidence: 50,
-          trend: 'Chart analysis temporarily unavailable.',
-          patterns: ['Contact support'],
-          support_levels: ['—'],
-          resistance_levels: ['—'],
-          prediction: 'Please configure API keys for full functionality.',
-          targets: ['—'],
-          risk: 'This is demo mode only.',
-          recommendation: 'Contact admin to enable full analysis.'
+          confidence: '0%'
         }
       });
     }
 
-    // Call Anthropic API
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    // Call OpenAI GPT-4 Vision API
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
+        'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'claude-opus-4-1-20250805',
-        max_tokens: 1024,
-        system: systemPrompt || 'You are an expert technical analyst.',
+        model: 'gpt-4-vision-preview',
         messages: [
           {
             role: 'user',
             content: [
               {
-                type: 'image',
-                source: {
-                  type: 'base64',
-                  media_type: mimeType || 'image/png',
-                  data: image
-                }
+                type: 'text',
+                text: chartAnalysisPrompt
               },
               {
-                type: 'text',
-                text: 'Analyze this trading chart. Return ONLY valid JSON.'
+                type: 'image_url',
+                image_url: {
+                  url: `data:image/jpeg;base64,${image}`
+                }
               }
             ]
           }
-        ]
+        ],
+        max_tokens: 2000,
+        temperature: 0.7
       })
     });
 
     if (!response.ok) {
-      const errorData = await response.text();
-      console.error('[v0] Anthropic API error:', response.status, errorData);
-      
-      throw new Error(`API Error: ${response.status}`);
+      const errorData = await response.json();
+      console.error('[v0] OpenAI API error:', response.status, errorData);
+      throw new Error(`OpenAI API Error: ${errorData.error?.message || 'Unknown error'}`);
     }
 
     const data = await response.json();
-    const rawText = data.content?.map(c => c.text || '').join('') || '';
+    const rawText = data.choices[0].message.content;
 
     // Parse JSON response
     let analysis = {};
     try {
-      // Try to extract JSON from response (might have markdown)
       const jsonMatch = rawText.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         analysis = JSON.parse(jsonMatch[0]);
       } else {
-        throw new Error('No JSON found');
+        throw new Error('No JSON found in response');
       }
     } catch (e) {
       console.error('[v0] JSON parse error:', e.message);
-      // Return fallback analysis from raw text
       analysis = {
-        overview: rawText || 'Could not generate analysis. Try another chart.',
+        overview: rawText || 'Analysis generated but in text format.',
         signal: 'NEUTRAL',
-        confidence: 50,
-        trend: 'See overview.',
-        patterns: ['See overview'],
-        support_levels: ['—'],
-        resistance_levels: ['—'],
-        prediction: rawText || 'See overview.',
-        targets: ['—'],
-        risk: 'Always use stop loss.',
-        recommendation: 'See overview.'
+        confidence: '50%'
       };
     }
 
@@ -121,17 +131,9 @@ export default async function handler(req, res) {
     return res.status(500).json({ 
       error: error.message || 'Failed to analyze chart',
       analysis: {
-        overview: 'Analysis service temporarily unavailable. Please try again.',
-        signal: 'NEUTRAL',
-        confidence: 30,
-        trend: 'Service error.',
-        patterns: ['Retry'],
-        support_levels: ['—'],
-        resistance_levels: ['—'],
-        prediction: 'Please try uploading the chart again.',
-        targets: ['—'],
-        risk: 'Service temporarily down.',
-        recommendation: 'Refresh and retry.'
+        overview: 'Chart analysis failed. Please try again or upload a clearer chart image.',
+        signal: 'ERROR',
+        confidence: '0%'
       }
     });
   }

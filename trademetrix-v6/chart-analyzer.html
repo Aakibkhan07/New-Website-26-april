@@ -457,82 +457,60 @@ class ChartAnalyzer {
   }
 
   async analyzeChart(imageFile) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          this.canvas = document.createElement('canvas');
-          this.canvas.width = img.width;
-          this.canvas.height = img.height;
-          this.ctx = this.canvas.getContext('2d');
-          this.ctx.drawImage(img, 0, 0);
-          this.imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+      reader.onload = async (e) => {
+        try {
+          // Extract base64 from data URL
+          const base64String = e.target.result.split(',')[1];
           
-          const analysis = this.performAnalysis();
-          resolve(analysis);
-        };
-        img.src = e.target.result;
+          // Call backend API with OpenAI
+          const response = await fetch('/api/analyze-chart', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              image: base64String
+            })
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to analyze chart');
+          }
+
+          const result = await response.json();
+          const analysis = result.analysis || {};
+          
+          // Transform API response to match expected format
+          const transformedAnalysis = {
+            trend: analysis.trend?.direction || 'NEUTRAL',
+            strength: analysis.trend?.strength || 'Moderate',
+            signal: analysis.signal || 'HOLD',
+            confidence: parseInt(analysis.confidence) || 50,
+            support: analysis.support_levels?.[0] || '—',
+            resistance: analysis.resistance_levels?.[0] || '—',
+            patterns: analysis.patterns || [],
+            rsi: analysis.indicators?.rsi || '—',
+            macd: analysis.indicators?.macd || '—',
+            predictedPrice: analysis.prediction || '—',
+            targets: analysis.targets || {},
+            stopLoss: analysis.stopLoss || '—',
+            riskReward: analysis.riskReward || '—',
+            chartType: analysis.chartType || 'Unknown',
+            timeframe: analysis.timeframe || 'Unknown',
+            currentPrice: analysis.currentPrice || '—',
+            overview: analysis.overview || 'Chart analysis completed.'
+          };
+
+          resolve(transformedAnalysis);
+        } catch (error) {
+          console.error('[v0] Analysis error:', error);
+          reject(error);
+        }
       };
       reader.readAsDataURL(imageFile);
     });
-  }
-
-  performAnalysis() {
-    // Simulated technical analysis based on image properties
-    const width = this.canvas.width;
-    const height = this.canvas.height;
-    const imageData = this.imageData;
-    const data = imageData.data;
-
-    // Analyze pixel colors to detect chart patterns
-    let redPixels = 0, greenPixels = 0, bluePixels = 0;
-    for (let i = 0; i < data.length; i += 4) {
-      redPixels += data[i];
-      greenPixels += data[i + 1];
-      bluePixels += data[i + 2];
-    }
-
-    const pixelCount = data.length / 4;
-    const avgRed = (redPixels / pixelCount / 255) * 100;
-    const avgGreen = (greenPixels / pixelCount / 255) * 100;
-    const avgBlue = (bluePixels / pixelCount / 255) * 100;
-
-    // Generate synthetic but realistic indicators
-    const rsi = Math.round(Math.random() * 100);
-    const macd = (Math.random() - 0.5) * 100;
-    const upperBand = 100 + Math.random() * 50;
-    const lowerBand = 100 - Math.random() * 50;
-    const support = Math.round((lowerBand + Math.random() * 20) * 100) / 100;
-    const resistance = Math.round((upperBand + Math.random() * 20) * 100) / 100;
-
-    // Trend detection based on color distribution
-    const trend = avgGreen > avgRed ? 'BULLISH' : 'BEARISH';
-    const strength = Math.abs(avgGreen - avgRed);
-
-    // Price prediction
-    const currentPrice = 100;
-    const priceChange = ((trend === 'BULLISH' ? 1 : -1) * (strength / 100) * 5);
-    const predictedPrice = Math.round((currentPrice + priceChange) * 100) / 100;
-    const confidence = Math.round((50 + strength / 2));
-
-    // Pattern detection
-    const patterns = this.detectPatterns(rsi, macd);
-
-    return {
-      trend,
-      strength: Math.round(strength),
-      rsi,
-      macd: Math.round(macd * 100) / 100,
-      upperBB: Math.round(upperBand * 100) / 100,
-      lowerBB: Math.round(lowerBand * 100) / 100,
-      support,
-      resistance,
-      predictedPrice,
-      confidence,
-      patterns,
-      recommendation: this.generateRecommendation(rsi, trend, confidence)
-    };
   }
 
   detectPatterns(rsi, macd) {
@@ -608,26 +586,71 @@ async function analyzeChart() {
 }
 
 function displayResults(analysis) {
+  const signalColor = analysis.signal === 'BUY' ? 'var(--g)' : analysis.signal === 'SELL' ? 'var(--r)' : '#fbbf24';
+  const trendColor = analysis.trend?.includes('Up') || analysis.trend === 'Uptrend' ? 'var(--g)' : 'var(--r)';
+  
   const html = `
-    <!-- TREND & STRENGTH -->
+    <!-- CHART INFO -->
     <div class="result-card">
-      <div class="result-title">📈 Market Trend</div>
-      <div class="result-value" style="color: ${analysis.trend === 'BULLISH' ? 'var(--g)' : 'var(--r)'};">${analysis.trend}</div>
-      <div class="result-sub">Trend Strength: ${analysis.strength}%</div>
+      <div class="result-title">📊 Chart Information</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; font-size: 12px;">
+        <div>
+          <div style="color: var(--t3);">Chart Type</div>
+          <div style="color: var(--t1); font-weight: 600;">${analysis.chartType}</div>
+        </div>
+        <div>
+          <div style="color: var(--t3);">Timeframe</div>
+          <div style="color: var(--t1); font-weight: 600;">${analysis.timeframe}</div>
+        </div>
+        <div>
+          <div style="color: var(--t3);">Current Price</div>
+          <div style="color: var(--t1); font-weight: 600;">${analysis.currentPrice}</div>
+        </div>
+      </div>
     </div>
 
-    <!-- PREDICTION -->
-    <div class="result-card">
-      <div class="result-title">🔮 Price Prediction</div>
-      <div class="result-value">${analysis.predictedPrice}</div>
+    <!-- TRADING SIGNAL -->
+    <div class="result-card" style="border-left-color: ${signalColor};">
+      <div class="result-title" style="color: ${signalColor};">⚡ Trading Signal</div>
+      <div class="result-value" style="color: ${signalColor}; font-size: 32px;">${analysis.signal}</div>
       <div class="result-sub">Confidence: <strong>${analysis.confidence}%</strong></div>
     </div>
 
-    <!-- RECOMMENDATION -->
-    <div class="result-card" style="border-left-color: #fbbf24;">
-      <div class="result-title" style="color: #fbbf24;">⚡ Recommendation</div>
-      <div style="font-size: 15px; color: var(--t1); font-weight: 600; margin-bottom: 6px;">${analysis.recommendation}</div>
-      <div class="result-sub">Based on current technical signals</div>
+    <!-- TREND & STRENGTH -->
+    <div class="result-card">
+      <div class="result-title">📈 Market Trend</div>
+      <div class="result-value" style="color: ${trendColor};">${analysis.trend}</div>
+      <div class="result-sub">${analysis.strength}</div>
+    </div>
+
+    <!-- PRICE PREDICTION -->
+    <div class="result-card">
+      <div class="result-title">🔮 Price Targets</div>
+      <div style="margin-top: 8px; font-size: 13px;">
+        <div style="margin-bottom: 8px;">
+          <div style="color: var(--t3); font-size: 11px;">Short Term</div>
+          <div style="color: var(--t1); font-weight: 700;">${analysis.targets?.shortTerm || analysis.predictedPrice}</div>
+        </div>
+        <div>
+          <div style="color: var(--t3); font-size: 11px;">Medium Term</div>
+          <div style="color: var(--t1); font-weight: 700;">${analysis.targets?.mediumTerm || '—'}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RISK MANAGEMENT -->
+    <div class="result-card" style="border-left-color: var(--r);">
+      <div class="result-title" style="color: var(--r);">🛑 Risk Management</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; font-size: 12px;">
+        <div>
+          <div style="color: var(--t3);">Stop Loss</div>
+          <div style="color: var(--r); font-weight: 600;">${analysis.stopLoss}</div>
+        </div>
+        <div>
+          <div style="color: var(--t3);">Risk/Reward</div>
+          <div style="color: var(--t1); font-weight: 600;">${analysis.riskReward}</div>
+        </div>
+      </div>
     </div>
 
     <!-- TECHNICAL INDICATORS -->
@@ -635,20 +658,12 @@ function displayResults(analysis) {
       <div style="font-size: 12px; font-weight: 700; color: #22d3ee; margin-bottom: 12px;">Technical Indicators</div>
       <div class="indicator-grid">
         <div class="indicator">
-          <div class="indicator-name">RSI (14)</div>
+          <div class="indicator-name">RSI</div>
           <div class="indicator-value">${analysis.rsi}</div>
         </div>
         <div class="indicator">
           <div class="indicator-name">MACD</div>
           <div class="indicator-value">${analysis.macd}</div>
-        </div>
-        <div class="indicator">
-          <div class="indicator-name">Bollinger Upper</div>
-          <div class="indicator-value">${analysis.upperBB}</div>
-        </div>
-        <div class="indicator">
-          <div class="indicator-name">Bollinger Lower</div>
-          <div class="indicator-value">${analysis.lowerBB}</div>
         </div>
       </div>
     </div>
