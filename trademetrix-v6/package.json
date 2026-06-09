@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Trade Metrix Technologies — Algo Trading Software",
   "dependencies": {
+    "chart.js": "^4.5.1",
     "razorpay": "^2.9.2"
   }
 }
