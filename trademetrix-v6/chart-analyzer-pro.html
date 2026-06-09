@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TradeMetrix Pro Chart Analyzer - Price Action, ICT, SMC Analysis</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0a0a0a;
+      --t1: #f5f5f5;
+      --t2: #d1d5db;
+      --t3: #9ca3af;
+      --bl: rgba(255,255,255,.1);
+      --g: #10b981;
+      --r: #ef4444;
+      --y: #fbbf24;
+      --c: #22d3ee;
+      --ral: 12px;
+    }
+    
+    html { background: var(--bg); }
+    body {
+      background: var(--bg);
+      color: var(--t1);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      margin-bottom: 32px;
+    }
+    
+    .header-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      color: var(--c);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    .header-back:hover { color: var(--t1); }
+    
+    .header h1 {
+      font-size: 36px;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    
+    .header p {
+      color: var(--t3);
+      font-size: 14px;
+    }
+    
+    .upload-section {
+      border: 2px dashed var(--bl);
+      border-radius: var(--ral);
+      padding: 48px 32px;
+      text-align: center;
+      margin-bottom: 32px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: rgba(34, 211, 238, 0.02);
+    }
+    
+    .upload-section:hover {
+      border-color: var(--c);
+      background: rgba(34, 211, 238, 0.05);
+    }
+    
+    .upload-section.active {
+      border-color: var(--c);
+      background: rgba(34, 211, 238, 0.1);
+    }
+    
+    #chartInput { display: none; }
+    
+    .upload-text {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .upload-sub {
+      color: var(--t3);
+      font-size: 14px;
+    }
+    
+    .preview-section {
+      display: none;
+      margin-bottom: 32px;
+      gap: 32px;
+      grid-template-columns: 300px 1fr;
+    }
+    
+    .preview-section.active { display: grid; }
+    
+    .preview-image {
+      border-radius: var(--ral);
+      overflow: hidden;
+      border: 1px solid var(--bl);
+      background: rgba(0,0,0,.5);
+    }
+    
+    .preview-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    
+    .loading-state {
+      display: none;
+      text-align: center;
+      padding: 48px 32px;
+      border-radius: var(--ral);
+      border: 1px solid var(--bl);
+      margin-bottom: 32px;
+    }
+    
+    .loading-state.active { display: block; }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(34, 211, 238, 0.3);
+      border-top-color: var(--c);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+    
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    .results-section {
+      display: none;
+    }
+    
+    .results-section.active { display: block; }
+    
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 32px;
+      border-bottom: 1px solid var(--bl);
+      overflow-x: auto;
+      padding-bottom: 0;
+    }
+    
+    .tab {
+      padding: 12px 20px;
+      border: none;
+      background: none;
+      color: var(--t3);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+    }
+    
+    .tab:hover { color: var(--t1); }
+    .tab.active {
+      color: var(--c);
+      border-bottom-color: var(--c);
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active { display: block; }
+    
+    .card {
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--bl);
+      border-radius: var(--ral);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .signal-badge {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+    
+    .signal-buy { background: rgba(16, 185, 129, 0.2); color: var(--g); }
+    .signal-sell { background: rgba(239, 68, 68, 0.2); color: var(--r); }
+    .signal-hold { background: rgba(251, 191, 36, 0.2); color: var(--y); }
+    
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .stat-box {
+      background: rgba(34, 211, 238, 0.08);
+      border-left: 3px solid var(--c);
+      padding: 16px;
+      border-radius: 6px;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: var(--t3);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--t1);
+    }
+    
+    .stat-sub {
+      font-size: 12px;
+      color: var(--t3);
+      margin-top: 4px;
+    }
+    
+    .targets-sl {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 16px 0;
+    }
+    
+    .target-item {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 12px;
+      border-radius: 6px;
+      text-align: center;
+    }
+    
+    .target-item.sl {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    
+    .target-label {
+      font-size: 11px;
+      color: var(--t3);
+      margin-bottom: 4px;
+    }
+    
+    .target-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--t1);
+    }
+    
+    .methodology-box {
+      background: rgba(34, 211, 238, 0.05);
+      border-left: 3px solid var(--c);
+      padding: 16px;
+      margin-bottom: 16px;
+      border-radius: 6px;
+    }
+    
+    .methodology-title {
+      font-weight: 700;
+      color: var(--c);
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    
+    .methodology-text {
+      font-size: 13px;
+      color: var(--t2);
+      line-height: 1.7;
+    }
+    
+    .indicators-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    
+    .indicator-item {
+      background: rgba(255,255,255,.02);
+      border: 1px solid var(--bl);
+      padding: 16px;
+      border-radius: 6px;
+    }
+    
+    .indicator-name {
+      font-size: 12px;
+      color: var(--t3);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    
+    .indicator-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--t1);
+      margin-bottom: 4px;
+    }
+    
+    .indicator-status {
+      font-size: 12px;
+      color: var(--t3);
+    }
+    
+    .error-box {
+      background: rgba(239, 68, 68, 0.1);
+      border-left: 3px solid var(--r);
+      padding: 16px;
+      border-radius: 6px;
+      color: var(--t2);
+      margin-bottom: 16px;
+    }
+    
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary {
+      background: var(--c);
+      color: var(--bg);
+    }
+    
+    .btn-primary:hover { background: #06b6d4; }
+    
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--bl);
+      color: var(--t1);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255,255,255,.05);
+      border-color: var(--c);
+    }
+    
+    .warning-box {
+      background: rgba(251, 191, 36, 0.1);
+      border-left: 3px solid var(--y);
+      padding: 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--t2);
+      margin-top: 16px;
+    }
+    
+    @media (max-width: 768px) {
+      .preview-section { grid-template-columns: 1fr; }
+      .header h1 { font-size: 24px; }
+      .targets-sl { grid-template-columns: 1fr; }
+      .tabs { font-size: 12px; }
+      .tab { padding: 10px 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <a href="index.html" class="header-back">← Back to Website</a>
+      <h1>Pro Chart Analyzer</h1>
+      <p>Advanced analysis using Price Action, ICT & SMC with AI-powered predictions</p>
+    </div>
+
+    <!-- Upload Section -->
+    <div class="upload-section" id="uploadSection">
+      <div class="upload-text">📊 Upload Your Trading Chart</div>
+      <div class="upload-sub">Drag & drop your chart or click to select (PNG, JPG, up to 10MB)</div>
+      <input type="file" id="chartInput" accept="image/*">
+    </div>
+
+    <!-- Preview + Analysis -->
+    <div class="preview-section" id="previewSection">
+      <div class="preview-image" id="previewImage"></div>
+      <div>
+        <button class="btn btn-primary" id="analyzeBtn">🔍 Analyze Chart</button>
+        <button class="btn btn-secondary" id="newChartBtn" style="margin-left: 8px;">Upload Different Chart</button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-state" id="loadingState">
+      <div class="spinner"></div>
+      <div>Analyzing chart with Price Action, ICT & SMC...</div>
+      <div style="font-size: 12px; color: var(--t3); margin-top: 8px;">This may take 10-15 seconds</div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="results-section" id="resultsSection">
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-tab="overview">📊 Overview</button>
+        <button class="tab" data-tab="price-action">📈 Price Action</button>
+        <button class="tab" data-tab="ict">🎯 ICT Analysis</button>
+        <button class="tab" data-tab="smc">💰 SMC Analysis</button>
+        <button class="tab" data-tab="indicators">📉 Indicators</button>
+        <button class="tab" data-tab="targets">🎪 Targets & SL</button>
+      </div>
+
+      <!-- Overview Tab -->
+      <div class="tab-content active" id="overview">
+        <div id="overviewContent"></div>
+      </div>
+
+      <!-- Price Action Tab -->
+      <div class="tab-content" id="price-action">
+        <div id="priceActionContent"></div>
+      </div>
+
+      <!-- ICT Tab -->
+      <div class="tab-content" id="ict">
+        <div id="ictContent"></div>
+      </div>
+
+      <!-- SMC Tab -->
+      <div class="tab-content" id="smc">
+        <div id="smcContent"></div>
+      </div>
+
+      <!-- Indicators Tab -->
+      <div class="tab-content" id="indicators">
+        <div id="indicatorsContent"></div>
+      </div>
+
+      <!-- Targets Tab -->
+      <div class="tab-content" id="targets">
+        <div id="targetsContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const uploadSection = document.getElementById('uploadSection');
+    const chartInput = document.getElementById('chartInput');
+    const previewSection = document.getElementById('previewSection');
+    const previewImage = document.getElementById('previewImage');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const newChartBtn = document.getElementById('newChartBtn');
+    const loadingState = document.getElementById('loadingState');
+    const resultsSection = document.getElementById('resultsSection');
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    let currentImage = null;
+
+    // Upload handlers
+    uploadSection.addEventListener('click', () => chartInput.click());
+    uploadSection.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadSection.classList.add('active');
+    });
+    uploadSection.addEventListener('dragleave', () => {
+      uploadSection.classList.remove('active');
+    });
+    uploadSection.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadSection.classList.remove('active');
+      if (e.dataTransfer.files[0]) {
+        handleImageUpload(e.dataTransfer.files[0]);
+      }
+    });
+
+    chartInput.addEventListener('change', (e) => {
+      if (e.target.files[0]) {
+        handleImageUpload(e.target.files[0]);
+      }
+    });
+
+    newChartBtn.addEventListener('click', () => {
+      previewSection.classList.remove('active');
+      resultsSection.classList.remove('active');
+      uploadSection.classList.remove('active');
+      chartInput.value = '';
+      currentImage = null;
+    });
+
+    analyzeBtn.addEventListener('click', analyzeChart);
+
+    // Tab switching
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const tabName = tab.dataset.tab;
+        tabs.forEach((t) => t.classList.remove('active'));
+        tabContents.forEach((tc) => tc.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tabName)?.classList.add('active');
+      });
+    });
+
+    function handleImageUpload(file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Please upload an image file');
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        alert('Image size must be less than 10MB');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        currentImage = e.target.result;
+        previewImage.innerHTML = `<img src="${currentImage}" alt="Chart Preview">`;
+        previewSection.classList.add('active');
+        uploadSection.classList.add('active');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function analyzeChart() {
+      if (!currentImage) return;
+
+      loadingState.classList.add('active');
+      previewSection.style.pointerEvents = 'none';
+
+      try {
+        const base64String = currentImage.split(',')[1];
+        const response = await fetch('/api/analyze-chart', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: base64String })
+        });
+
+        if (!response.ok) throw new Error('Analysis failed');
+        const result = await response.json();
+        const analysis = result.analysis || {};
+
+        loadingState.classList.remove('active');
+        previewSection.style.pointerEvents = 'auto';
+        resultsSection.classList.add('active');
+
+        displayResults(analysis);
+      } catch (error) {
+        loadingState.classList.remove('active');
+        previewSection.style.pointerEvents = 'auto';
+        alert('Error analyzing chart: ' + error.message);
+      }
+    }
+
+    function displayResults(analysis) {
+      // Overview
+      document.getElementById('overviewContent').innerHTML = `
+        <div class="card">
+          <div class="card-title">📊 Chart Information</div>
+          <div class="grid-2">
+            <div class="stat-box">
+              <div class="stat-label">Chart Type</div>
+              <div class="stat-value">${analysis.chart_info?.type || '—'}</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Timeframe</div>
+              <div class="stat-value">${analysis.chart_info?.timeframe || '—'}</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Current Price</div>
+              <div class="stat-value">${analysis.chart_info?.current_price || '—'}</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Currency</div>
+              <div class="stat-value">${analysis.chart_info?.currency || '—'}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">⚡ Trading Signal</div>
+          <div class="signal-badge signal-${analysis.combined_signal?.signal?.includes('BUY') ? 'buy' : analysis.combined_signal?.signal?.includes('SELL') ? 'sell' : 'hold'}">
+            ${analysis.combined_signal?.signal || 'NEUTRAL'}
+          </div>
+          <div class="grid-2">
+            <div class="stat-box">
+              <div class="stat-label">Confluence Level</div>
+              <div class="stat-value">${analysis.combined_signal?.confluence || '—'}</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Trade Strength</div>
+              <div class="stat-value">${analysis.combined_signal?.strength || '—'}%</div>
+            </div>
+          </div>
+          <div style="margin-top: 16px; padding: 16px; background: rgba(34,211,238,0.05); border-radius: 6px;">
+            <div style="font-size: 13px; color: var(--t2); line-height: 1.7;">
+              ${analysis.combined_signal?.trade_setup || 'Analyzing...'}
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">📋 Summary</div>
+          <div style="font-size: 13px; color: var(--t2); line-height: 1.8;">
+            ${analysis.summary || 'Analysis in progress...'}
+          </div>
+        </div>
+      `;
+
+      // Price Action
+      document.getElementById('priceActionContent').innerHTML = `
+        <div class="card">
+          <div class="card-title">📈 Price Action Analysis</div>
+          <div class="methodology-box">
+            <div class="methodology-title">Structure</div>
+            <div class="methodology-text">${analysis.price_action?.structure || '—'}</div>
+          </div>
+          <div class="methodology-box">
+            <div class="methodology-title">Key Levels</div>
+            <div class="methodology-text">
+              ${analysis.price_action?.key_levels?.map(l => `• ${l}`).join('<br>') || '—'}
+            </div>
+          </div>
+          <div class="methodology-box">
+            <div class="methodology-title">Momentum</div>
+            <div class="methodology-text">${analysis.price_action?.momentum || '—'}</div>
+          </div>
+          <div class="methodology-box">
+            <div class="methodology-title">Analysis</div>
+            <div class="methodology-text">${analysis.price_action?.analysis || '—'}</div>
+          </div>
+          <div class="methodology-box">
+            <div class="methodology-title">Signal</div>
+            <div class="methodology-text" style="color: ${analysis.price_action?.signal?.includes('BUY') ? 'var(--g)' : 'var(--r)'};">
+              ${analysis.price_action?.signal || '—'}
+            </div>
+          </div>
+        </div>
+      `;
+
+      // ICT
+      document.getElementById('ictContent').innerHTML = `
+        <div class="card">
+          <div class="card-title">🎯 ICT Analysis</div>
+          <div class="methodology-box">
+            <div class="methodology-title">Market Structure</div>
+            <div class="methodology-text">${analysis.ict_analysis?.market_structure || '—'}</div>
+          </div>
+          <div class="methodology-box">
+            <div class="methodology-title">Liquidity Levels</div>
+            <div class="methodology-text">
+              ${analysis.ict_analysis?.liquidity_levels?.map(l => `• ${l}`).join('<br>') || '—'}
+            </div>
+          </div>
+          <div class="methodology-box">
+            <div class="methodology-title">Inducement</div>
+            <div class="methodology-text">${analysis.ict_analysis?.inducement || '—'}</div>
+          </div>
+          <div class="methodology-box">
+            <div class="methodology-title">Displacement</div>
+            <div class="methodology-text">${analysis.ict_analysis?.displacement || '—'}</div>
+          </div>
+          <div class="methodology-box">
+            <div class="methodology-title">AOTE Potential</div>
+            <div class="methodology-text">${analysis.ict_analysis?.aote || '—'}</div>
+          </div>
+          <div class="methodology-box">
+            <div class="methodology-title">Signal</div>
+            <div class="methodology-text" style="color: ${analysis.ict_analysis?.signal?.includes('BUY') ? 'var(--g)' : 'var(--r)'};">
+              ${analysis.ict_analysis?.signal || '—'}
+            </div>
+          </div>
+        </div>
+      `;
+
+      // SMC
+      document.getElementById('smcContent').innerHTML = `
+        <div class="card">
+          <div class="card-title">💰 Smart Money Concepts</div>
+          <div class="methodology-box">
+            <div class="methodology-title">Smart Money Bias</div>
+            <div class="methodology-text">${analysis.smc_analysis?.smart_money || '—'}</div>
+          </div>
+          <div class="methodology-box">
+            <div class="methodology-title">Order Blocks</div>
+            <div class="methodology-text">
+              ${analysis.smc_analysis?.ob_zones?.map(l => `• ${l}`).join('<br>') || '—'}
+            </div>
+          </div>
+          <div class="methodology-box">
+            <div class="methodology-title">Fair Value Gaps</div>
+            <div class="methodology-text">
+              ${analysis.smc_analysis?.fvg?.map(l => `• ${l}`).join('<br>') || '—'}
+            </div>
+          </div>
+          <div class="methodology-box">
+            <div class="methodology-title">Break of Structure</div>
+            <div class="methodology-text">${analysis.smc_analysis?.bos || '—'}</div>
+          </div>
+          <div class="methodology-box">
+            <div class="methodology-title">Liquidity Grab</div>
+            <div class="methodology-text">${analysis.smc_analysis?.liquidity_grab || '—'}</div>
+          </div>
+          <div class="methodology-box">
+            <div class="methodology-title">Signal</div>
+            <div class="methodology-text" style="color: ${analysis.smc_analysis?.signal?.includes('BUY') ? 'var(--g)' : 'var(--r)'};">
+              ${analysis.smc_analysis?.signal || '—'}
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Indicators
+      document.getElementById('indicatorsContent').innerHTML = `
+        <div class="card">
+          <div class="card-title">📉 Technical Indicators</div>
+          <div class="indicators-grid">
+            <div class="indicator-item">
+              <div class="indicator-name">RSI (14)</div>
+              <div class="indicator-value">${analysis.technical_indicators?.rsi_14?.split('(')[0] || '—'}</div>
+              <div class="indicator-status">${analysis.technical_indicators?.rsi_14?.split('(')[1]?.replace(')', '') || ''}</div>
+            </div>
+            <div class="indicator-item">
+              <div class="indicator-name">MACD</div>
+              <div class="indicator-value">${analysis.technical_indicators?.macd?.split('-')[0] || '—'}</div>
+              <div class="indicator-status">${analysis.technical_indicators?.macd?.includes('bullish') ? 'Bullish' : 'Bearish'}</div>
+            </div>
+            <div class="indicator-item">
+              <div class="indicator-name">Bollinger Bands</div>
+              <div class="indicator-value">${analysis.technical_indicators?.bollinger_bands?.split('-')[0] || '—'}</div>
+              <div class="indicator-status">${analysis.technical_indicators?.bollinger_bands?.split('-')[1] || ''}</div>
+            </div>
+            <div class="indicator-item">
+              <div class="indicator-name">ATR (14)</div>
+              <div class="indicator-value">${analysis.technical_indicators?.atr_14?.split('-')[0] || '—'}</div>
+              <div class="indicator-status">${analysis.technical_indicators?.atr_14?.split('-')[1] || ''}</div>
+            </div>
+            <div class="indicator-item">
+              <div class="indicator-name">MA 20</div>
+              <div class="indicator-value">${analysis.technical_indicators?.ma_20 || '—'}</div>
+            </div>
+            <div class="indicator-item">
+              <div class="indicator-name">MA 50</div>
+              <div class="indicator-value">${analysis.technical_indicators?.ma_50 || '—'}</div>
+            </div>
+            <div class="indicator-item">
+              <div class="indicator-name">MA 200</div>
+              <div class="indicator-value">${analysis.technical_indicators?.ma_200 || '—'}</div>
+            </div>
+            <div class="indicator-item">
+              <div class="indicator-name">Stochastic</div>
+              <div class="indicator-value">${analysis.technical_indicators?.stochastic?.split('-')[0] || '—'}</div>
+              <div class="indicator-status">${analysis.technical_indicators?.stochastic?.split('-')[1] || ''}</div>
+            </div>
+            <div class="indicator-item">
+              <div class="indicator-name">Volume</div>
+              <div class="indicator-value">${analysis.technical_indicators?.volume?.split('-')[0] || '—'}</div>
+            </div>
+            <div class="indicator-item">
+              <div class="indicator-name">MACD Histogram</div>
+              <div class="indicator-value">${analysis.technical_indicators?.macd_histogram || '—'}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Targets & SL
+      document.getElementById('targetsContent').innerHTML = `
+        <div class="card">
+          <div class="card-title">🎯 Price Targets</div>
+          <div class="targets-sl">
+            <div class="target-item">
+              <div class="target-label">TARGET 1</div>
+              <div class="target-value">${analysis.targets?.target_1 || '—'}</div>
+            </div>
+            <div class="target-item">
+              <div class="target-label">TARGET 2</div>
+              <div class="target-value">${analysis.targets?.target_2 || '—'}</div>
+            </div>
+            <div class="target-item">
+              <div class="target-label">TARGET 3</div>
+              <div class="target-value">${analysis.targets?.target_3 || '—'}</div>
+            </div>
+          </div>
+          <div style="margin-top: 16px; padding: 12px; background: rgba(34,211,238,0.05); border-radius: 6px; font-size: 12px; color: var(--t3);">
+            Calculation: ${analysis.targets?.calculation_method || 'Based on technical levels'}
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">🛑 Stop Loss</div>
+          <div class="targets-sl">
+            <div class="target-item sl" style="grid-column: 1;">
+              <div class="target-label">SL LEVEL</div>
+              <div class="target-value">${analysis.stop_loss?.level || '—'}</div>
+            </div>
+          </div>
+          <div style="margin-top: 16px;">
+            <div style="font-size: 12px; color: var(--t3); margin-bottom: 4px;">Placement:</div>
+            <div style="font-size: 13px; color: var(--t2);">${analysis.stop_loss?.placement || '—'}</div>
+          </div>
+          <div style="margin-top: 12px;">
+            <div style="font-size: 12px; color: var(--t3); margin-bottom: 4px;">Reasoning:</div>
+            <div style="font-size: 13px; color: var(--t2);">${analysis.stop_loss?.reasoning || '—'}</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">📊 Risk/Reward Analysis</div>
+          <div class="grid-2">
+            <div class="stat-box">
+              <div class="stat-label">Risk/Reward Ratio</div>
+              <div class="stat-value">${analysis.risk_reward?.ratio || '—'}</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Potential Profit</div>
+              <div class="stat-value" style="color: var(--g);">+${analysis.risk_reward?.potential_pips || '—'}</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Potential Loss</div>
+              <div class="stat-value" style="color: var(--r);">-${analysis.risk_reward?.risk_pips || '—'}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Warnings
+      if (analysis.warnings && analysis.warnings.length > 0) {
+        resultsSection.innerHTML += `
+          <div class="warning-box">
+            <strong>⚠️ Warnings:</strong><br>
+            ${analysis.warnings.map(w => `• ${w}`).join('<br>')}
+          </div>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>

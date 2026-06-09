@@ -467,17 +467,55 @@ async function doAnalysis(){
 Be specific. Apply SMC concepts (order blocks, FVG, liquidity) if visible. Identify key price levels.`;
 
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:curFile.type||'image/png',data:imgB64}},{type:'text',text:'Analyze this trading chart.'}]}]})});
-    const data=await res.json();clearInterval(iv);ld.style.display='none';
-    const raw=data.content.map(i=>i.text||'').join('');
-    let a;
-    try{a=JSON.parse(raw.replace(/```json|```/g,'').trim());}
-    catch{a={overview:raw,signal:'NEUTRAL',confidence:60,trend:'See overview.',patterns:['See overview'],support_levels:['—'],resistance_levels:['—'],prediction:raw,targets:['—'],risk:'Always use stop loss.',recommendation:'See overview.'};}
+    // Use Vercel AI Gateway endpoint (backend proxy recommended for production)
+    const formData = new FormData();
+    formData.append('image', imgB64);
+    formData.append('mimeType', curFile.type || 'image/png');
+    
+    const res = await fetch('/api/analyze-chart', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        image: imgB64,
+        mimeType: curFile.type || 'image/png',
+        systemPrompt: SYS
+      })
+    });
+    
+    clearInterval(iv);
+    ld.style.display='none';
+    
+    if (!res.ok) {
+      throw new Error(`Server error: ${res.status}`);
+    }
+    
+    const data = await res.json();
+    
+    if (data.error) {
+      throw new Error(data.error);
+    }
+    
+    let a = data.analysis || {};
+    
+    // Validate and fill defaults
+    if (!a.overview) a.overview = 'Could not generate analysis. Try another chart.';
+    if (!a.signal) a.signal = 'NEUTRAL';
+    if (!a.confidence) a.confidence = 50;
+    if (!a.trend) a.trend = 'See overview.';
+    if (!a.patterns) a.patterns = ['See overview'];
+    if (!a.support_levels) a.support_levels = ['—'];
+    if (!a.resistance_levels) a.resistance_levels = ['—'];
+    if (!a.prediction) a.prediction = 'See overview.';
+    if (!a.targets) a.targets = ['—'];
+    if (!a.risk) a.risk = 'Always use stop loss.';
+    if (!a.recommendation) a.recommendation = 'See overview.';
+    
     renderResults(a);
   }catch(err){
     clearInterval(iv);ld.style.display='none';
     rs.style.display='block';
-    rs.innerHTML=`<div style="background:var(--slate-2);border:1px solid rgba(248,113,113,.2);padding:24px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;color:var(--red);margin-bottom:8px">ERROR</div><div style="font-size:13px;color:var(--t2)">Analysis fail hui. Dobara try karo. (${err.message})</div></div>`;
+    console.error('[v0] Chart analysis error:', err);
+    rs.innerHTML=`<div style="background:var(--slate-2);border:1px solid rgba(248,113,113,.2);padding:24px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;color:var(--red);margin-bottom:8px">ERROR</div><div style="font-size:13px;color:var(--t2)">Analysis fail hui. Dobara try karo.<br><span style="font-size:11px;color:var(--t3)">${err.message || 'Unknown error'}</span></div></div>`;
     ab.disabled=false;
   }
 }
@@ -613,10 +651,19 @@ function hideDots(){const t=document.getElementById('td');if(t)t.remove();}
 async function getReply(){
   cBusy=true;cs.disabled=true;showDots();
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:BOT_SYS,messages:cHist})});
-    const d=await res.json();hideDots();
-    botMsg(d.content?.map(i=>i.text||'').join('')||'Kuch problem aa gayi, dobara try karo!');
-  }catch{hideDots();botMsg('Network issue! ⚠️ Thodi der baad try karo.');}
+    const res=await fetch('/api/chat-bot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({systemPrompt:BOT_SYS,messages:cHist})});
+    const d=await res.json();
+    hideDots();
+    if (d.error) {
+      botMsg('Kuch problem aa gayi, dobara try karo! ⚠️');
+    } else {
+      botMsg(d.reply || 'Kuch problem aa gayi, dobara try karo!');
+    }
+  }catch(err){
+    console.error('[v0] Chat error:', err);
+    hideDots();
+    botMsg('Network issue! ⚠️ Thodi der baad try karo.');
+  }
   cBusy=false;cs.disabled=false;ci.focus();
 }
 </script>
