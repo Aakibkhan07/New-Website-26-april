@@ -1,36 +1,84 @@
-const chartAnalysisPrompt = `You are an expert technical analysis professional specializing in trading charts. Analyze the provided trading chart image and provide a comprehensive technical analysis.
+const chartAnalysisPrompt = `You are an expert trader specializing in Price Action, ICT (Inner Circle Trader), and SMC (Smart Money Concepts) analysis. Analyze the provided chart with ALL these trading methodologies.
 
-Return your analysis in this exact JSON format:
+CRITICAL: Return ONLY valid JSON (no markdown, no extra text) in this format:
 {
-  "chartType": "candlestick/line/ohlc/etc",
-  "timeframe": "estimated timeframe",
-  "currentPrice": "current price level if visible",
-  "trend": {
-    "direction": "Uptrend/Downtrend/Sideways",
-    "strength": "Strong/Moderate/Weak",
-    "description": "detailed description"
+  "chart_info": {
+    "type": "candlestick/line/etc",
+    "timeframe": "identified timeframe",
+    "current_price": "latest price level",
+    "currency": "identified currency pair or stock"
   },
-  "support_levels": ["level1", "level2", "level3"],
-  "resistance_levels": ["level1", "level2", "level3"],
-  "patterns": ["Hammer", "Doji", "Engulfing", "etc - list detected patterns"],
-  "indicators": {
-    "rsi": "RSI value and interpretation",
-    "macd": "MACD status",
-    "movingAverages": "MA alignment and interpretation"
+  "price_action": {
+    "structure": "Higher Highs/Higher Lows (Uptrend) OR Lower Highs/Lower Lows (Downtrend) OR Range",
+    "key_levels": ["major swing highs", "major swing lows"],
+    "break_points": "identified breakout levels",
+    "consolidations": "ranging areas and breakout potential",
+    "momentum": "acceleration or deceleration observed",
+    "analysis": "detailed price action setup"
   },
-  "signal": "BUY/SELL/HOLD",
-  "confidence": "80-95%",
-  "prediction": "Next likely price level based on technical analysis",
+  "ict_analysis": {
+    "market_structure": "Direction of the institutional flow",
+    "liquidity_levels": ["premium zones", "discount zones"],
+    "inducement": "Where institutions trapped retail traders",
+    "displacement": "Current displacement from consolidation",
+    "aote": "Amount Of Trade Expansion potential",
+    "mi_filter": "Is price in a mitigation filter",
+    "signal": "Based on ICT methodology"
+  },
+  "smc_analysis": {
+    "smart_money": "Buy/Sell side bias",
+    "ob_zones": ["Order Block levels - institutional zones"],
+    "fvg": ["Fair Value Gap levels"],
+    "bos": "Break of Structure - trend direction",
+    "choch": "Change of Character - momentum shift",
+    "liquidity_grab": "Where institutions swept liquidity",
+    "imbalance": "Bullish/Bearish imbalance areas",
+    "signal": "Based on SMC methodology"
+  },
+  "technical_indicators": {
+    "rsi_14": "value (0-100) and status (overbought/oversold/neutral)",
+    "macd": "MACD line, Signal line status (bullish/bearish/neutral)",
+    "bollinger_bands": "Price position relative to bands (upper/middle/lower)",
+    "atr_14": "volatility level and expansion/contraction",
+    "ma_20": "20-period moving average position",
+    "ma_50": "50-period moving average position",
+    "ma_200": "200-period moving average (trend filter)",
+    "stochastic": "K% and D% values (overbought/oversold)",
+    "volume": "volume profile analysis",
+    "macd_histogram": "Momentum strength (expanding/contracting)"
+  },
   "targets": {
-    "shortTerm": "price target for next 1-3 days",
-    "mediumTerm": "price target for next 1-2 weeks"
+    "target_1": "First TP level (nearest)",
+    "target_2": "Second TP level",
+    "target_3": "Third TP level (furthest)",
+    "calculation_method": "How targets were calculated"
   },
-  "stopLoss": "recommended stop loss level",
-  "riskReward": "risk-reward ratio explanation",
-  "overview": "comprehensive analysis summary with key observations"
+  "stop_loss": {
+    "level": "SL level",
+    "placement": "Above resistance OR Below support",
+    "reasoning": "Why this SL"
+  },
+  "risk_reward": {
+    "ratio": "1:2, 1:3, etc",
+    "potential_pips": "Expected profit in pips/points",
+    "risk_pips": "Potential loss in pips/points"
+  },
+  "combined_signal": {
+    "signal": "STRONG BUY / BUY / HOLD / SELL / STRONG SELL",
+    "confluence": "How many methodologies agree (Price Action, ICT, SMC, Indicators)",
+    "strength": "Very Strong / Strong / Moderate / Weak (0-100%)",
+    "trade_setup": "Is this a high-probability setup?"
+  },
+  "warnings": ["any red flags or concerns"],
+  "summary": "Executive summary of all analysis combined"
 }
 
-Be precise, professional, and provide specific price levels where visible.`;
+METHODOLOGY EXPLANATIONS:
+- Price Action: Pure price movement, supply/demand, no indicators
+- ICT: Institutional order placement, liquidity hunting, market structure
+- SMC: Order blocks, fair value gaps, break of structure, liquid zones
+- All targeting specific price levels visible on chart
+- Must provide specific TP and SL values, not ranges`;
 
 export default async function handler(req, res) {
   // Enable CORS
