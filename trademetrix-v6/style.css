@@ -1063,3 +1063,290 @@ footer{margin-top:80px;padding:48px 0;border-top:1px solid var(--bl);position:re
 }
 @media(max-width:560px){.grid2{grid-template-columns:1fr}}
 @media(max-width:420px){#cwin{width:calc(100vw - 32px);right:16px;bottom:84px}#cfab{right:16px;bottom:16px}}
+
+/* ═══ VISUAL UPGRADES ═══════════════════════════════════ */
+
+/* Back to top button */
+.back-to-top {
+  position:fixed; bottom:90px; right:24px; z-index:998;
+  width:44px; height:44px; border-radius:50%;
+  background:var(--cd3); border:1px solid var(--bl);
+  color:var(--t2); font-size:18px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none;
+  transform:translateY(16px);
+  transition:all .3s cubic-bezier(.22,.68,0,1.2);
+  box-shadow:0 4px 16px rgba(0,0,0,.3);
+}
+.back-to-top.visible {
+  opacity:1; pointer-events:all; transform:translateY(0);
+}
+.back-to-top:hover {
+  background:var(--indigo); color:#fff; border-color:rgba(99,102,241,.5);
+  transform:translateY(-3px); box-shadow:0 8px 24px rgba(79,70,229,.3);
+}
+
+/* Glassmorphism card effect on hover */
+.feat-card:hover, .tcard:hover, .price-card:hover, .sc-card:hover, .ac-card:hover {
+  backdrop-filter:blur(12px);
+  background:rgba(26,27,54,.85);
+}
+
+/* Improved scroll reveal animation */
+.rv, .rvl, .rvr {
+  transition:opacity .7s cubic-bezier(.22,.68,0,1), transform .7s cubic-bezier(.22,.68,0,1);
+}
+.rv { transform:translateY(30px); }
+.rvl { transform:translateX(-30px); }
+.rvr { transform:translateX(30px); }
+
+/* Smoother stagger children */
+.feat-card, .tcard, .price-card { transition:all .35s cubic-bezier(.22,.68,0,1.2); }
+
+/* Button micro-interactions */
+.btn-big, .btn-cta, .btn-line, .btn-out {
+  position:relative; overflow:hidden;
+}
+.btn-big::before, .btn-cta::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.08),transparent 50%);
+  opacity:0; transition:opacity .3s;
+}
+.btn-big:hover::before, .btn-cta:hover::before { opacity:1; }
+
+/* Pulse ring on primary buttons */
+.btn-big::after, .btn-cta::after {
+  content:''; position:absolute; inset:-4px;
+  border-radius:inherit;
+  background:inherit;
+  opacity:0; z-index:-1;
+  transition:opacity .3s;
+}
+.btn-big:hover::after, .btn-cta:hover::after {
+  opacity:.3;
+  filter:blur(12px);
+}
+
+/* Gradient border glow on hero card */
+.hero-card {
+  transition:all .4s cubic-bezier(.22,.68,0,1.2);
+}
+.hero-card:hover {
+  transform:translateY(-8px);
+  box-shadow:0 32px 100px rgba(0,0,0,.3), 0 0 0 1px rgba(99,102,241,.15);
+  animation-play-state:paused;
+}
+
+/* Premium stat card styling */
+.sc { transition:all .3s cubic-bezier(.22,.68,0,1.2); }
+.sc:hover { transform:translateY(-2px); }
+.sc-n { transition:all .3s; }
+.sc:hover .sc-n { background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+/* Nav scroll shadow enhancement */
+.nav.on { box-shadow:0 4px 40px rgba(0,0,0,.5); }
+
+/* Smooth section transitions */
+.sec { transition:background .3s; }
+
+/* Premium pill badge enhancement */
+.pill {
+  transition:all .3s;
+}
+.pill:hover {
+  background:rgba(99,102,241,.18);
+  transform:translateY(-1px);
+  box-shadow:0 4px 16px rgba(79,70,229,.15);
+}
+
+/* Strategy card return number styling */
+.sc-ret {
+  transition:all .3s;
+  display:inline-block;
+}
+.sc-card:hover .sc-ret {
+  transform:scale(1.05);
+}
+
+/* Testimonial quote styling enhancement */
+.ttext {
+  position:relative;
+  padding-left:4px;
+}
+
+/* Price card popular badge enhancement */
+.price-card.pop {
+  transform:translateY(-4px);
+}
+
+/* Enhanced CTA section */
+.cta-box {
+  transition:all .3s;
+}
+.cta-box:hover {
+  box-shadow:0 0 0 1px rgba(99,102,241,.1), 0 32px 100px rgba(0,0,0,.4);
+  transform:translateY(-2px);
+}
+
+/* Mobile nav toggle styling */
+.nav-toggle {
+  display:none;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--bl);
+  border-radius:8px;
+  width:40px; height:40px;
+  align-items:center; justify-content:center;
+  color:var(--t1); font-size:20px; cursor:pointer;
+  transition:all .2s;
+  margin-left:auto;
+}
+.nav-toggle:hover {
+  background:rgba(255,255,255,.08);
+  border-color:rgba(99,102,241,.3);
+}
+@media(max-width:640px){
+  .nav-toggle { display:flex !important; }
+}
+
+/* Smooth mobile nav animation */
+@media(max-width:640px){
+  .nav-links {
+    transition:all .35s cubic-bezier(.22,.68,0,1.2);
+    transform:translateY(-8px);
+  }
+  .nav-links.open {
+    transform:translateY(0);
+  }
+  .nav-links a {
+    opacity:0;
+    transform:translateX(-12px);
+    transition:all .25s ease;
+  }
+  .nav-links.open a {
+    opacity:1;
+    transform:translateX(0);
+  }
+  .nav-links.open a:nth-child(1) { transition-delay:.05s; }
+  .nav-links.open a:nth-child(2) { transition-delay:.1s; }
+  .nav-links.open a:nth-child(3) { transition-delay:.15s; }
+  .nav-links.open a:nth-child(4) { transition-delay:.2s; }
+  .nav-links.open a:nth-child(5) { transition-delay:.25s; }
+  .nav-links.open a:nth-child(6) { transition-delay:.3s; }
+  .nav-links.open a:nth-child(7) { transition-delay:.35s; }
+  .nav-links.open a:nth-child(8) { transition-delay:.4s; }
+}
+
+/* Smooth scrollbar enhancement */
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-thumb { background:linear-gradient(180deg,var(--indigo),var(--violet)); border-radius:3px; }
+
+/* Loading shimmer on cards */
+@keyframes cardShimmer {
+  0% { background-position:-200% 0; }
+  100% { background-position:200% 0; }
+}
+
+/* Better focus styles */
+a:focus-visible, button:focus-visible {
+  outline:2px solid var(--indigo);
+  outline-offset:3px;
+  border-radius:4px;
+}
+
+/* Disabled button enhancement */
+button:disabled, .btn-analyze:disabled {
+  opacity:.35;
+  cursor:not-allowed;
+  filter:grayscale(.6);
+}
+
+/* Tooltip-like badge enhancement */
+.feat-badge {
+  transition:all .25s;
+}
+.feat-card:hover .feat-badge {
+  background:rgba(99,102,241,.15);
+  border-color:rgba(99,102,241,.3);
+  color:var(--t1);
+}
+
+/* Hero floating pills enhancement */
+.fpill {
+  transition:all .3s;
+}
+.fpill:hover {
+  transform:translateY(-14px) scale(1.05) !important;
+  background:rgba(10,11,20,.9);
+  border-color:rgba(99,102,241,.4);
+}
+
+/* WhatsApp button enhancement */
+.wa {
+  transition:all .3s cubic-bezier(.22,.68,0,1.2);
+}
+.wa:hover {
+  transform:scale(1.15);
+  box-shadow:0 8px 30px rgba(37,211,102,.5);
+}
+
+/* Broker strip items */
+.bi {
+  transition:all .25s;
+}
+.bi:hover {
+  transform:translateY(-2px);
+}
+
+/* FAQ item enhancement */
+.faq-item {
+  transition:all .3s;
+}
+.faq-item:hover {
+  border-color:rgba(99,102,241,.15);
+}
+
+/* Toast enhancement */
+#toasts {
+  position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+  z-index:9999;
+  display:flex; flex-direction:column; gap:8px; align-items:center;
+  pointer-events:none;
+}
+#toasts > * {
+  pointer-events:all;
+  animation:toastIn .35s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes toastIn {
+  from { opacity:0; transform:translateY(20px) scale(.9); }
+  to { opacity:1; transform:translateY(0) scale(1); }
+}
+
+/* Premium gradient border on key sections */
+.hero-card::before, .comp::before, .stats-row {
+  transition:all .3s;
+}
+
+/* Better text rendering */
+body {
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+}
+
+/* Animated gradient border effect on popular price card */
+@keyframes borderGlow {
+  0%,100% { border-color:rgba(99,102,241,.4); box-shadow:0 0 0 1px rgba(99,102,241,.15); }
+  50% { border-color:rgba(99,102,241,.6); box-shadow:0 0 0 2px rgba(99,102,241,.25); }
+}
+.price-card.pop {
+  animation:borderGlow 3s ease-in-out infinite;
+}
+
+/* Navigation CTA button subtle pulse */
+@keyframes ctaPulse {
+  0%,100% { box-shadow:0 4px 18px rgba(79,70,229,.4); }
+  50% { box-shadow:0 4px 28px rgba(79,70,229,.6); }
+}
+.btn-cta {
+  animation:ctaPulse 3s ease-in-out infinite;
+}

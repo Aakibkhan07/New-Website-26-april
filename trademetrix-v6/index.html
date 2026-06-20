@@ -31,11 +31,12 @@
 <!-- Hamburger menu CSS -->
 <style>
 @media(max-width:640px){
-  .nav-toggle{display:block!important;margin-left:auto}
+  .nav-toggle{display:flex!important}
   .nav-links{display:none;position:absolute;top:66px;left:0;right:0;background:rgba(16,17,40,.96);backdrop-filter:blur(20px);flex-direction:column;padding:16px 28px;gap:8px;border-bottom:1px solid var(--bl)}
   .nav-links.open{display:flex}
   .nav-r{gap:6px}
 }
+.skip-link:focus{top:10px!important}
 </style>
 
 <!-- JSON-LD Structured Data -->
@@ -1576,6 +1577,7 @@
   </div>
 </footer>
 
+<button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
 <a href="https://wa.me/917415660385" class="wa" target="_blank" title="Chat on WhatsApp">💬</a>
 <div id="toasts" role="alert"></div>
 <script src="script.js" defer></script>
@@ -1603,6 +1605,12 @@ function tfaq(el){
   document.querySelectorAll('.faq-item.open').forEach(i=>{ i.classList.remove('open'); i.querySelector('.faq-a').style.maxHeight='0'; i.querySelector('.faq-q').setAttribute('aria-expanded','false'); });
   if(!open){ item.classList.add('open'); const a=item.querySelector('.faq-a'); a.style.maxHeight=a.scrollHeight+'px'; el.setAttribute('aria-expanded','true'); }
 }
+// Back to top
+const btt = document.getElementById('backToTop');
+window.addEventListener('scroll', () => {
+  btt.classList.toggle('visible', window.scrollY > 600);
+});
+btt.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
 </script>
 </body>
 </html>
