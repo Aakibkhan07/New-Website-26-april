@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradeMetrix — Pricing Plans | Algo Trading Software</title>
+<meta name="description" content="Choose the right plan for your algo trading needs. Monthly ₹15,500, Quarterly ₹35,500, Half-Yearly ₹69,500, Yearly ₹1,25,000. 1-day free trial.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://app.trademetrix.tech/pricing">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://app.trademetrix.tech/pricing">
+<meta property="og:title" content="TradeMetrix — Pricing Plans">
+<meta property="og:description" content="Simple, transparent pricing for algorithmic trading software. Plans from ₹15,500/month. 1-day free trial.">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TradeMetrix Pricing">
+<meta name="twitter:description" content="Algo trading software pricing. Start with a 1-day free trial.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="pricing-style.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "TradeMetrix Algo Trading Software",
+  "offers": [
+    {"@type":"Offer","name":"Monthly","price":"15500","priceCurrency":"INR"},
+    {"@type":"Offer","name":"Quarterly","price":"35500","priceCurrency":"INR"},
+    {"@type":"Offer","name":"Half-Yearly","price":"69500","priceCurrency":"INR"},
+    {"@type":"Offer","name":"Yearly","price":"125000","priceCurrency":"INR"}
+  ]
+}
+</script>
+</head>
+<body>
+
+<a href="#main-content" style="position:absolute;top:-100px;left:0;background:#00d4aa;color:#000;padding:10px 16px;z-index:10000;font-size:14px;font-weight:600">Skip to main content</a>
+
+<header aria-label="Site header">
+<nav aria-label="Main navigation">
+  <a href="#" class="logo">
+    <div class="logo-icon">TM</div>
+    <span class="logo-name">TradeMetrix</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Learn Algo</a></li>
+    <li><a href="#">Features</a></li>
+    <li><a href="#">Strategies</a></li>
+    <li><a href="#" class="active">Pricing</a></li>
+    <li><a href="performance.html">Performance</a></li>
+    <li><a href="trademetrix-academy-platform.html">Academy</a></li>
+  </ul>
+  <button class="nav-toggle" aria-label="Toggle navigation menu" style="display:none;background:none;border:none;color:#e4e7f0;font-size:22px;cursor:pointer">☰</button>
+  <a href="#" class="nav-cta">🚀 Start Free Trial</a>
+</nav>
+</header>
+
+<main id="main-content">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-chip">Simple, transparent pricing</div>
+  <h1 class="hero-h1">Choose Your<br><span class="g">Trading Edge</span></h1>
+  <p class="hero-sub">1-day free trial on all plans. No credit card required. Cancel anytime. Hamesha transparent pricing — koi hidden charges nahi.</p>
+  <div class="billing-toggle">
+    <button class="toggle-btn active" id="monthlyBtn" onclick="setBilling('monthly')">Monthly</button>
+    <button class="toggle-btn" id="annualBtn" onclick="setBilling('annual')">Annual <span class="save-badge">Save 30%</span></button>
+  </div>
+</div>
+
+<!-- PLANS -->
+<div class="plans-section">
+  <div class="plans-grid">
+
+    <!-- STARTER -->
+    <div class="plan-card">
+      <div class="plan-name">Starter</div>
+      <div class="plan-price"><sup>₹</sup><span id="p1">999</span></div>
+      <div class="plan-period">per month</div>
+      <div class="plan-annual" id="a1"></div>
+      <div class="plan-desc">Intraday traders ke liye jo NIFTY aur BANKNIFTY pe signals chahiye. Beginners ke liye perfect starting point.</div>
+      <div class="plan-features">
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">NIFTY &amp; BANKNIFTY signals</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Real-time TradingView alerts</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Entry, SL, T1, T2 levels</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Telegram notifications</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Academy — 3 free courses</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Email support</span></div>
+        <div class="pf"><div class="pf-check no">—</div><span class="pf-text muted">SMC deep analysis</span></div>
+        <div class="pf"><div class="pf-check no">—</div><span class="pf-text muted">Webhook / broker API</span></div>
+        <div class="pf"><div class="pf-check no">—</div><span class="pf-text muted">Options signals</span></div>
+        <div class="pf"><div class="pf-check no">—</div><span class="pf-text muted">Custom strategy settings</span></div>
+      </div>
+      <button class="plan-btn ghost" onclick="startTrial('Starter')">Start Free Trial →</button>
+      <div class="plan-trial">1-day free · No card required</div>
+    </div>
+
+    <!-- PRO (FEATURED) -->
+    <div class="plan-card featured">
+      <div class="plan-popular">Most Popular</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price"><sup>₹</sup><span id="p2">2,499</span></div>
+      <div class="plan-period">per month</div>
+      <div class="plan-annual" id="a2"></div>
+      <div class="plan-desc">Serious traders ke liye jo full SMC + multi-indicator signals chahiye. TradeMetrix Pro ka complete power.</div>
+      <div class="plan-features">
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Everything in Starter</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Full SMC analysis (OB, FVG, BOS)</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">15-point confluence engine</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Options signals (Calls &amp; Puts)</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Swing + Scalp signals</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Webhook integration</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">All 8 Academy courses</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Priority Telegram support</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Custom ATR multipliers</span></div>
+        <div class="pf"><div class="pf-check no">—</div><span class="pf-text muted">Broker API automation</span></div>
+      </div>
+      <button class="plan-btn primary" onclick="startTrial('Pro')">🚀 Start Free Trial →</button>
+      <div class="plan-trial">1-day free · No card required</div>
+    </div>
+
+    <!-- INSTITUTIONAL -->
+    <div class="plan-card">
+      <div class="plan-name">Institutional</div>
+      <div class="plan-price"><sup>₹</sup><span id="p3">7,999</span></div>
+      <div class="plan-period">per month</div>
+      <div class="plan-annual" id="a3"></div>
+      <div class="plan-desc">Prop traders, HNI investors aur algo traders ke liye. Full automation aur multi-account support.</div>
+      <div class="plan-features">
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Everything in Pro</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Broker API auto-execution</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Zerodha, Dhan, Fyers support</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Multi-account (up to 5)</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Custom strategy parameters</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Risk management controls</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Dedicated account manager</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">1-on-1 onboarding call</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">Phone support</span></div>
+        <div class="pf"><div class="pf-check yes">✓</div><span class="pf-text">SLA uptime guarantee</span></div>
+      </div>
+      <button class="plan-btn ghost" onclick="startTrial('Institutional')">Contact Sales →</button>
+      <div class="plan-trial">Custom pricing available for teams</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- COMPARE TABLE -->
+<div class="compare-section">
+  <div class="compare-header">
+    <div class="section-tag">Full Comparison</div>
+    <div class="section-title">Plans <span class="g">Side by Side</span></div>
+  </div>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th style="width:36%">Feature</th>
+        <th>Starter</th>
+        <th class="featured-col">Pro ★</th>
+        <th>Institutional</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="cat-row"><td colspan="4">Signals</td></tr>
+      <tr><td>NIFTY &amp; BANKNIFTY Signals</td><td><span class="ct-yes">✓</span></td><td class="featured-col"><span class="ct-yes">✓</span></td><td><span class="ct-yes">✓</span></td></tr>
+      <tr><td>Options Signals (Calls &amp; Puts)</td><td><span class="ct-no">—</span></td><td class="featured-col"><span class="ct-yes">✓</span></td><td><span class="ct-yes">✓</span></td></tr>
+      <tr><td>Swing Signals</td><td><span class="ct-no">—</span></td><td class="featured-col"><span class="ct-yes">✓</span></td><td><span class="ct-yes">✓</span></td></tr>
+      <tr><td>Scalp Signals</td><td><span class="ct-yes">✓</span></td><td class="featured-col"><span class="ct-yes">✓</span></td><td><span class="ct-yes">✓</span></td></tr>
+      <tr><td>Signal Confidence Score</td><td><span class="ct-val">Basic</span></td><td class="featured-col"><span class="ct-val accent">15-point</span></td><td><span class="ct-val accent">15-point</span></td></tr>
+      <tr class="cat-row"><td colspan="4">Smart Money Concepts</td></tr>
+      <tr><td>Order Blocks (OB)</td><td><span class="ct-no">—</span></td><td class="featured-col"><span class="ct-yes">✓</span></td><td><span class="ct-yes">✓</span></td></tr>
+      <tr><td>Fair Value Gaps (FVG)</td><td><span class="ct-no">—</span></td><td class="featured-col"><span class="ct-yes">✓</span></td><td><span class="ct-yes">✓</span></td></tr>
+      <tr><td>BOS &amp; CHoCH Detection</td><td><span class="ct-no">—</span></td><td class="featured-col"><span class="ct-yes">✓</span></td><td><span class="ct-yes">✓</span></td></tr>
+      <tr><td>Liquidity Sweeps</td><td><span class="ct-no">—</span></td><td class="featured-col"><span class="ct-yes">✓</span></td><td><span class="ct-yes">✓</span></td></tr>
+      <tr class="cat-row"><td colspan="4">Alerts &amp; Integration</td></tr>
+      <tr><td>TradingView Alerts</td><td><span class="ct-yes">✓</span></td><td class="featured-col"><span class="ct-yes">✓</span></td><td><span class="ct-yes">✓</span></td></tr>
+      <tr><td>Telegram Notifications</td><td><span class="ct-yes">✓</span></td><td class="featured-col"><span class="ct-yes">✓</span></td><td><span class="ct-yes">✓</span></td></tr>
+      <tr><td>Webhook Integration</td><td><span class="ct-no">—</span></td><td class="featured-col"><span class="ct-yes">✓</span></td><td><span class="ct-yes">✓</span></td></tr>
+      <tr><td>Broker API Automation</td><td><span class="ct-no">—</span></td><td class="featured-col"><span class="ct-no">—</span></td><td><span class="ct-yes">✓</span></td></tr>
+      <tr><td>Multi-account Support</td><td><span class="ct-val">1</span></td><td class="featured-col"><span class="ct-val">1</span></td><td><span class="ct-val accent">Up to 5</span></td></tr>
+      <tr class="cat-row"><td colspan="4">Education &amp; Support</td></tr>
+      <tr><td>Academy Courses</td><td><span class="ct-val">3 courses</span></td><td class="featured-col"><span class="ct-val accent">All 8 courses</span></td><td><span class="ct-val accent">All 8 courses</span></td></tr>
+      <tr><td>Support Channel</td><td><span class="ct-val">Email</span></td><td class="featured-col"><span class="ct-val accent">Priority Telegram</span></td><td><span class="ct-val accent">Phone + Dedicated</span></td></tr>
+      <tr><td>Onboarding Call</td><td><span class="ct-no">—</span></td><td class="featured-col"><span class="ct-no">—</span></td><td><span class="ct-yes">✓</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- FAQ -->
+<div class="faq-section">
+  <div class="compare-header">
+    <div class="section-tag">FAQ</div>
+    <div class="section-title">Common <span class="g">Questions</span></div>
+  </div>
+  <div id="faqList"></div>
+</div>
+
+<!-- GUARANTEE -->
+<div class="guarantee-section">
+  <div class="guarantee-card">
+    <div class="guarantee-icon">🛡️</div>
+    <div>
+      <div class="guarantee-title">7-Day Money Back Guarantee</div>
+      <div class="guarantee-desc">Agar pehle 7 din mein satisfied nahi hue — koi bhi reason — full refund milega. No questions asked. Hum apne product pe itne confident hain ki risk tumhara nahi, hamara hai.</div>
+      <div class="guarantee-badges">
+        <span class="g-badge">✓ No Questions Asked</span>
+        <span class="g-badge">✓ Full Refund</span>
+        <span class="g-badge">✓ Instant Processing</span>
+        <span class="g-badge">✓ Cancel Anytime</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer aria-label="Site footer">
+  <div class="footer-logo">
+    <div class="logo-icon">TM</div>
+    <span style="font-size:15px;font-weight:700">TradeMetrix</span>
+  </div>
+  <p style="font-size:12px;color:var(--text3);margin-bottom:4px">India's Algo Software Platform · No Tips · No Advisory</p>
+  <div class="footer-links">
+    <a href="#">Home</a><a href="#">Features</a><a href="#">Pricing</a>
+    <a href="performance.html">Performance</a><a href="trademetrix-academy-platform.html">Academy</a><a href="#">Contact</a>
+  </div>
+  <p class="footer-note">© 2026 TradeMetrix Technologies · Algo software only · Not SEBI registered · Not financial advice</p>
+</footer>
+
+</main>
+
+<script src="pricing-script.js" defer></script>
+
+<script>
+document.querySelector('.nav-toggle')?.addEventListener('click', function(){
+  const links = document.querySelector('.nav-links');
+  links.style.display = links.style.display === 'flex' ? 'none' : 'flex';
+  if(window.innerWidth <= 900) {
+    links.style.flexDirection = 'column';
+    links.style.position = 'absolute';
+    links.style.top = '62px';
+    links.style.left = '0';
+    links.style.right = '0';
+    links.style.background = 'rgba(7,8,15,0.96)';
+    links.style.padding = '16px 36px';
+    links.style.borderBottom = '1px solid var(--border)';
+  }
+});
+document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+  if(window.innerWidth <= 900) document.querySelector('.nav-links').style.display = 'none';
+}));
+</script>
+
+</body>
+</html>

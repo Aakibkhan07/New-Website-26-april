@@ -14,7 +14,7 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: "Missing fields." });
     }
 
-    const KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || "yrQNl6UFQLv0lh0sRMcDDNp7";
+    const KEY_SECRET = process.env.RAZORPAY_KEY_SECRET;
 
     const expected = crypto
       .createHmac("sha256", KEY_SECRET)
